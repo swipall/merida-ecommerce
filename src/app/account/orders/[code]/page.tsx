@@ -73,7 +73,7 @@ export default async function OrderDetailPage(props: PageProps<'/account/orders/
                                 {order.items.results.map((item) => (
                                     <div key={item.id} className="flex gap-4">
                                         <div
-                                            className="relative h-20 w-20 rounded-md overflow-hidden bg-gray-100 shrink-0">
+                                            className="relative h-20 w-20 rounded-md overflow-hidden bg-muted shrink-0">
                                             {item.item.featured_image && (
                                                 <Image
                                                     src={item.item.featured_image}

@@ -15,7 +15,7 @@ export function Navbar() {
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center gap-8">
                         <Link href="/" className="text-xl font-bold">
-                            <Image src="/swipall-icon.svg" alt="Swipall" width={40} height={27} className="h-6 w-auto dark:invert" />
+                            <Image src="https://mmcb.b-cdn.net/media/attachments/0/c/4/0/60593b52331c1146353026da4cbc9ffbfd78b635db83fca47b25690df620/logo.jpg" alt="Swipall" width={40} height={27} className="h-14 w-auto" />
                         </Link>
                         <nav className="hidden md:flex items-center gap-6">
                             <Suspense>
@@ -29,7 +29,7 @@ export function Navbar() {
                                 <SearchInput/>
                             </Suspense>
                         </div>
-                        <ThemeSwitcher />
+                     
                         <Suspense>
                             <NavbarCart/>
                         </Suspense>
