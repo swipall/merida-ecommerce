@@ -32,13 +32,17 @@ export async function HomeProductsByCategorySection({ post }: HomeProductsByCate
         return null;
     }
 
-    const customerId = await getAuthUserCustomerId();
-    const result = await searchProducts({
-        limit,
-        offset: 0,
-        ordering,
-        taxonomies__slug__and: categorySlug,
-    }, customerId);
+    let result;
+    try {
+        result = await searchProducts({
+            limit,
+            offset: 0,
+            ordering,
+            taxonomies__slug__and: categorySlug,
+        });
+    } catch {
+        return null;
+    }
 
     const products = result.results.filter((product) => product.kind !== ProductKind.Service);
 
