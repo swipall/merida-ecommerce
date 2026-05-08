@@ -39,7 +39,7 @@ export function Navbar() {
                         </nav>
                     </div>
 
-                    {/* Right: search + cart + user */}
+                    {/* Right: search (desktop) + cart + user */}
                     <div className="flex items-center gap-2">
                         <div className="hidden lg:flex">
                             <Suspense fallback={<SearchInputSkeleton />}>
@@ -47,22 +47,18 @@ export function Navbar() {
                             </Suspense>
                         </div>
 
-                        {/* Mobile search icon — navigates to /search */}
-                        <Link
-                            href="/search"
-                            className="lg:hidden flex items-center justify-center h-9 w-9 rounded-md hover:bg-primary hover:text-primary-foreground transition-colors"
-                            aria-label="Buscar"
-                        >
-                            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </Link>
-
                         <Suspense>
                             <NavbarCart />
                         </Suspense>
                         <NavbarUser />
                     </div>
+                </div>
+
+                {/* Mobile: buscador debajo de la barra principal */}
+                <div className="lg:hidden pb-2">
+                    <Suspense fallback={<SearchInputSkeleton />}>
+                        <SearchInput />
+                    </Suspense>
                 </div>
             </div>
         </header>
