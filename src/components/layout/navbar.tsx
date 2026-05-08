@@ -5,6 +5,7 @@ import { NavbarCollectionsMobile } from '@/components/layout/navbar/navbar-colle
 import { NavbarCart } from '@/components/layout/navbar/navbar-cart';
 import { NavbarUser } from '@/components/layout/navbar/navbar-user';
 import { MobileMenu } from '@/components/layout/navbar/mobile-menu';
+import { ThemeSwitcher } from '@/components/layout/navbar/theme-switcher';
 import { Suspense } from "react";
 import { SearchInput } from '@/components/layout/search-input';
 import { SearchInputSkeleton } from '@/components/shared/skeletons/search-input-skeleton';
@@ -25,7 +26,7 @@ export function Navbar() {
                         <Link href="/" className="flex-shrink-0">
                             <Image
                                 src="https://mmcb.b-cdn.net/media/attachments/0/c/4/0/60593b52331c1146353026da4cbc9ffbfd78b635db83fca47b25690df620/logo.jpg"
-                                alt="Koi Collectibles"
+                                alt="Swipall"
                                 width={40}
                                 height={27}
                                 className="h-14 w-auto"
@@ -47,6 +48,7 @@ export function Navbar() {
                             </Suspense>
                         </div>
 
+                        <ThemeSwitcher />
                         <Suspense>
                             <NavbarCart />
                         </Suspense>

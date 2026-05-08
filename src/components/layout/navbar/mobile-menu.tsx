@@ -8,6 +8,7 @@ import {
     SheetContent,
     SheetTrigger,
 } from '@/components/ui/sheet';
+import { ThemeSwitcher } from '@/components/layout/navbar/theme-switcher';
 
 interface MobileMenuProps {
     children: React.ReactNode;
@@ -34,6 +35,10 @@ export function MobileMenu({ children }: MobileMenuProps) {
                     </div>
                     <div className="flex-1 overflow-y-auto py-2" onClick={() => setOpen(false)}>
                         {children}
+                    </div>
+                    <div className="px-4 py-3 border-t border-border flex items-center justify-between">
+                        <span className="text-sm text-muted-foreground">Tema</span>
+                        <ThemeSwitcher />
                     </div>
                 </div>
             </SheetContent>

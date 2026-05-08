@@ -23,7 +23,7 @@ async function Copyright() {
     'use cache';
     cacheLife('days');
     return (
-        <div>
+        <div className='text-muted-foreground'>
             © {new Date().getFullYear()} KOI Collectibles. All rights reserved.
         </div>
     );
@@ -97,7 +97,7 @@ export async function Footer() {
                 {/* Bottom bar */}
                 <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/50">
                     <Copyright />
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-muted-foreground">
                         <span>Powered by</span>
                         <a
                             href="https://swipall.io"
