@@ -84,8 +84,22 @@ export async function getPosts(params: any): Promise<InterfaceApiListResponse<Cm
     return get<InterfaceApiListResponse<CmsPost>>('/api/v1/cms/posts', params);
 }
 
-export async function getPostDetail(slug: string): Promise<CmsPost> {
-    return get<CmsPost>(`/api/v1/cms/post/${slug}`);
+export async function getPostDetail(slug: string): Promise<CmsPost | null> {
+    try {
+        const response = await get<any>(`/api/v1/cms/post/${slug}`);
+        if (!response) return null;
+        // Handle wrapped response { data: CmsPost }
+        if (response.data && typeof response.data === 'object' && 'slug' in response.data) {
+            return response.data as CmsPost;
+        }
+        // Handle direct response
+        if ('slug' in response) {
+            return response as CmsPost;
+        }
+        return null;
+    } catch {
+        return null;
+    }
 }
 
 // ============================================================================

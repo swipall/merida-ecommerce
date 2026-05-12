@@ -1,5 +1,6 @@
 import { NavbarLink } from '@/components/layout/navbar/navbar-link';
 import { NavbarDropdownItem } from '@/components/layout/navbar/navbar-dropdown-item';
+import { getMenuItemHref } from '@/components/layout/navbar/navbar-menu-helpers';
 import {
     NavigationMenu,
     NavigationMenuItem,
@@ -22,7 +23,7 @@ export async function NavbarCollections() {
         })
     );
 
-    const redirectUrl = (item: CmsPost) => item.link || `/collection/${item.slug}`;
+    const redirectUrl = (item: CmsPost) => getMenuItemHref(item);
 
     return (
         <NavigationMenu>

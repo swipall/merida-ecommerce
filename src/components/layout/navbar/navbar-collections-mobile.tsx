@@ -1,3 +1,4 @@
+import { getMenuItemHref } from '@/components/layout/navbar/navbar-menu-helpers';
 import { getPosts } from '@/lib/swipall/rest-adapter';
 import { CmsPost } from '@/lib/swipall/types/types';
 import { cacheLife } from 'next/cache';
@@ -17,7 +18,7 @@ export async function NavbarCollectionsMobile() {
         })
     );
 
-    const redirectUrl = (item: CmsPost) => item.link || `/collection/${item.slug}`;
+    const redirectUrl = (item: CmsPost) => getMenuItemHref(item);
 
     return (
         <nav className="flex flex-col">
@@ -35,7 +36,7 @@ export async function NavbarCollectionsMobile() {
                             {item.children.map((child: CmsPost) => (
                                 <Link
                                     key={child.slug}
-                                    href={child.link || `/collection/${child.slug}`}
+                                    href={getMenuItemHref(child)}
                                     className="flex items-center px-8 py-2.5 text-sm text-white/70 hover:bg-primary hover:text-primary-foreground transition-colors"
                                 >
                                     {child.title}

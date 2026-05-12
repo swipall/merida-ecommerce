@@ -64,7 +64,7 @@ export async function Footer() {
                             <h4 className="text-sm font-semibold mb-4 uppercase tracking-wider text-primary">
                                 {menu.title}
                             </h4>
-                            <ul className="space-y-2 text-sm text-white">
+                            <ul className="space-y-2 text-md text-white">
                                 {menu.items.length === 0 && (
                                     <li className="italic opacity-40">Sin contenido</li>
                                 )}
@@ -81,7 +81,7 @@ export async function Footer() {
                                             <span className="hover:text-primary transition-colors cursor-default">
                                                 {item.title}
                                                 {item.excerpt && (
-                                                    <span className="block text-xs mt-0.5 opacity-70">
+                                                    <span className="block text-md mt-0.5 opacity-70">
                                                         {item.excerpt}
                                                     </span>
                                                 )}

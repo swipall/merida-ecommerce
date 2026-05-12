@@ -97,13 +97,13 @@ async function VerifyEmailContent({searchParams}: {searchParams: Promise<Record<
 
 export default async function VerifyEmailPage({searchParams}: PageProps<'/account/verify-email'>) {
     return (
-        <div className="container mx-auto px-4 py-8 mt-16">
+        <div className="container mx-auto px-4 py-8 mt-[100] sm:mt-16">
             <Suspense fallback={
                 <Card className="max-w-md mx-auto">
                     <CardHeader>
-                        <CardTitle>Verifying Email...</CardTitle>
+                        <CardTitle>Verificando Correo...</CardTitle>
                         <CardDescription>
-                            Please wait while we verify your email address.
+                            Por favor espera mientras verificamos tu correo electrónico.
                         </CardDescription>
                     </CardHeader>
                 </Card>

@@ -27,6 +27,19 @@ async function getCollectionProducts(slug: string, searchParams: { [key: string]
     return results;
 }
 
+async function getTaxonomyProductCounts(taxonomySlugs: string[]) {
+    'use cache';
+    cacheLife('hours');
+
+    const counts = await Promise.all(
+        taxonomySlugs.map(async (slug) => {
+            const result = await searchProducts({ taxonomies__slug__and: slug, limit: 1 });
+            return [slug, result.count] as [string, number];
+        })
+    );
+    return Object.fromEntries(counts);
+}
+
 async function getCollectionMetadata(slug: string) {
     'use cache';
     cacheLife('hours');
@@ -82,13 +95,14 @@ export default async function CollectionPage({ params, searchParams }: PageProps
     const customerId = await getAuthUserCustomerId();
     const productDataPromise = getCollectionProducts(slug, searchParamsResolved, customerId);
     const taxonomies = await getTaxonomies({ parent__slug: slug });
+    const taxonomyCounts = await getTaxonomyProductCounts(taxonomies.results.map(t => t.slug));
     return (
-        <div className="container mx-auto px-4 py-8 mt-16">
+        <div className="container mx-auto px-4 py-8 mt-[100] sm:mt-16">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <aside className="lg:col-span-1">
                     <div className='font-bold text-sm text-primary uppercase'>Categorías</div>
                     <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg" />}>
-                        <FacetFilters taxonomies={taxonomies.results} searchParams={searchParamsResolved} />
+                        <FacetFilters taxonomies={taxonomies.results} searchParams={searchParamsResolved} counts={taxonomyCounts} />
                     </Suspense>
                 </aside>
                 <div className="lg:col-span-3">

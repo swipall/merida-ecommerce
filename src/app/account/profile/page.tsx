@@ -18,9 +18,9 @@ export default async function ProfilePage(_props: PageProps<'/account/profile'>)
     return (
         <div className="space-y-6">
             <div>
-                <h1 className="text-3xl font-bold">Profile</h1>
+                <h1 className="text-2xl md:text-3xl font-bold">Mi perfil</h1>
                 <p className="text-white/50 mt-2">
-                    Manage your account information
+                    Administra la información de tu cuenta
                 </p>
             </div>
 

@@ -5,9 +5,10 @@ import { TaxonomyInterface } from '@/lib/swipall/types/types';
 interface FacetFiltersProps {
     taxonomies: TaxonomyInterface[];
     searchParams: Record<string, string | string[] | undefined>;
+    counts?: Record<string, number>;
 }
 
-export function FacetFilters({ taxonomies, searchParams }: FacetFiltersProps) {
+export function FacetFilters({ taxonomies, searchParams, counts }: FacetFiltersProps) {
 
     const buildParams = (overrides: Record<string, string | null>) => {
         const params = new URLSearchParams();
@@ -91,9 +92,14 @@ export function FacetFilters({ taxonomies, searchParams }: FacetFiltersProps) {
                         <li key={taxonomy.id} className="text-white">
                             <a
                                 onClick={() => navigateToFacet(taxonomy)}
-                                className={`cursor-pointer transition-colors hover:text-primary ${taxonomy.slug === selectedSlug ? 'text-primary font-semibold' : ''}`}
+                                className={`cursor-pointer transition-colors hover:text-primary flex items-center gap-2 ${taxonomy.slug === selectedSlug ? 'text-primary font-semibold' : ''}`}
                             >
-                                {taxonomy.value ?? taxonomy.name}
+                                <span>{taxonomy.value ?? taxonomy.name}</span>
+                                {counts?.[taxonomy.slug] !== undefined && (
+                                    <span className="text-xs font-bold text-white/50 tabular-nums">
+                                        ({counts[taxonomy.slug]})
+                                    </span>
+                                )}
                             </a>
                         </li>
                     ))}
