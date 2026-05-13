@@ -321,6 +321,10 @@ export async function createMpPreference(cartId: string): Promise<MercadoPagoPre
     return put<MercadoPagoPreferenceResponse>(`/api/v1/shop/me/order/${cartId}/mp/preference/`, {}, { useAuthToken: true });
 }
 
+export async function setOrderRequested(cartId: string, paymentType: string): Promise<InterfaceApiDetailResponse<any>> {
+    return put<InterfaceApiDetailResponse<any>>(`/api/v1/shop/me/order/${cartId}/set/requested/`, { payment_type: paymentType }, { useAuthToken: true });
+}
+
 export async function validateOrderStatus(orderId: string): Promise<ShopCart | OrderDetailInterface> {
     return get<ShopCart | OrderDetailInterface>(`/api/v1/shop/me/order/${orderId}/status`, undefined, { useAuthToken: true });
 }
