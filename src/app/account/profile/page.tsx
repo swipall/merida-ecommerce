@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import { getAuthToken } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import { getCurrentCustomer } from '@/lib/swipall/rest-adapter';
 
 export const metadata: Metadata = {
     title: 'Profile',
@@ -15,6 +16,19 @@ export default async function ProfilePage(_props: PageProps<'/account/profile'>)
         redirect('/sign-in');
     }
 
+    let customer = null;
+    let currentEmail = '';
+    try {
+        const user = await getCurrentCustomer({ useAuthToken: true });
+        customer = {
+            firstName: user.first_name,
+            lastName: user.last_name,
+        };
+        currentEmail = user.email ?? '';
+    } catch {
+        // continue with empty defaults
+    }
+
     return (
         <div className="space-y-6">
             <div>
@@ -24,9 +38,9 @@ export default async function ProfilePage(_props: PageProps<'/account/profile'>)
                 </p>
             </div>
 
-            <EditProfileForm customer={null} />
+            <EditProfileForm customer={customer} />
 
-            <EditEmailForm currentEmail={''} />
+            <EditEmailForm currentEmail={currentEmail} />
 
             <ChangePasswordForm />
         </div>
