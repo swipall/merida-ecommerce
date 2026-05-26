@@ -23,7 +23,7 @@ export function SearchInput() {
 
     return (
         <form onSubmit={handleSubmit} className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50"/>
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground"/>
             <Input
                 type="search"
                 placeholder="Buscar productos..."

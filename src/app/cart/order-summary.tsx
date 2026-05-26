@@ -35,7 +35,7 @@ export function OrderSummary({activeOrder}: { activeOrder: Order }) {
 
             <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
-                    <span className="text-white/50">Subtotal</span>
+                    <span className="text-foreground">Subtotal</span>
                     <span>
                         <Price value={parseFloat(activeOrder.sub_total)}/>
                     </span>
@@ -49,7 +49,7 @@ export function OrderSummary({activeOrder}: { activeOrder: Order }) {
                     </div>
                 )}
                 <div className="flex justify-between text-sm">
-                    <span className="text-white/50">Impuestos</span>
+                    <span className="text-foreground">Impuestos</span>
                     <span>
                         <Price value={parseFloat(activeOrder.tax_total)}/>
                     </span>

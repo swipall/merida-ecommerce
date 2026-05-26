@@ -33,7 +33,7 @@ export default async function ProfilePage(_props: PageProps<'/account/profile'>)
         <div className="space-y-6">
             <div>
                 <h1 className="text-2xl md:text-3xl font-bold">Mi perfil</h1>
-                <p className="text-white/50 mt-2">
+                <p className="text-foreground mt-2">
                     Administra la información de tu cuenta
                 </p>
             </div>

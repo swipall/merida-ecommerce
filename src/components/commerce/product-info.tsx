@@ -243,13 +243,13 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
         <div className="space-y-6">
             {product.kind === ProductKind.Group ? (
                 selectedVariant?.sku && (
-                    <div className="text-xs text-white/50">
+                    <div className="text-xs text-foreground">
                         SKU: {selectedVariant.sku}
                     </div>
                 )
             ) : (
                 product.sku && (
-                    <div className="text-xs text-white/50">
+                    <div className="text-xs text-foreground">
                         SKU: {product.sku}
                     </div>
                 )

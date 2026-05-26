@@ -52,7 +52,7 @@ export function ChangePasswordForm() {
                             <button
                                 type="button"
                                 onClick={() => setShowPassword((prev) => !prev)}
-                                className="absolute inset-y-0 right-0 flex items-center px-3 text-white/50 hover:text-foreground"
+                                className="absolute inset-y-0 right-0 flex items-center px-3 text-foreground hover:text-foreground"
                                 aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                             >
                                 {showPassword ? (
@@ -77,7 +77,7 @@ export function ChangePasswordForm() {
                             <button
                                 type="button"
                                 onClick={() => setShowPassword((prev) => !prev)}
-                                className="absolute inset-y-0 right-0 flex items-center px-3 text-white/50 hover:text-foreground"
+                                className="absolute inset-y-0 right-0 flex items-center px-3 text-foreground hover:text-foreground"
                                 aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                             >
                                 {showPassword ? (

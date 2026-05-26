@@ -107,7 +107,7 @@ export function AddressesClient({ addresses }: AddressesClientProps) {
             {addresses.length === 0 ? (
                 <Card>
                     <CardContent className="py-12 text-center">
-                        <p className="text-white/50 mb-4">No tienes direcciones guardadas aún</p>
+                        <p className="text-foreground mb-4">No tienes direcciones guardadas aún</p>
                         <Button onClick={handleAddNew}>
                             <Plus className="mr-2 h-4 w-4" />
                             Agregar tu primera dirección
@@ -151,7 +151,7 @@ export function AddressesClient({ addresses }: AddressesClientProps) {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-sm text-white/50 space-y-1">
+                                <div className="text-sm text-foreground space-y-1">
                                     <p>{address.address}</p>
                                     {address.suburb && <p>{address.suburb}</p>}
                                     <p>

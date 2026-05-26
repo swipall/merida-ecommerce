@@ -107,7 +107,7 @@ export function ForgotPasswordForm() {
                         </Button>
                         <Link
                             href="/sign-in"
-                            className="text-sm text-center text-white/50 hover:text-primary"
+                            className="text-sm text-center text-foreground hover:text-primary"
                         >
                             Volver a Iniciar Sesión
                         </Link>

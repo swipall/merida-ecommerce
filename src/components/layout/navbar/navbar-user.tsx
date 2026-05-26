@@ -35,7 +35,7 @@ export function NavbarUser() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost">
+                <Button className="text-primary-foreground dark:text-white" variant="ghost">
                     <User className="h-5 w-5 text-primary-foreground" />
                     Hola, {firstName}
                 </Button>

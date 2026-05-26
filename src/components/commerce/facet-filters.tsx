@@ -96,7 +96,7 @@ export function FacetFilters({ taxonomies, searchParams, counts }: FacetFiltersP
                             >
                                 <span>{taxonomy.value ?? taxonomy.name}</span>
                                 {counts?.[taxonomy.slug] !== undefined && (
-                                    <span className="text-xs font-bold text-white/50 tabular-nums">
+                                    <span className="text-xs font-bold text-foreground tabular-nums">
                                         ({counts[taxonomy.slug]})
                                     </span>
                                 )}

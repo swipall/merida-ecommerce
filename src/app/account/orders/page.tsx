@@ -59,7 +59,7 @@ export default async function OrdersPage(props: PageProps<'/account/orders'>) {
 
             {orders.length === 0 ? (
                 <div className="text-center py-12">
-                    <p className="text-white/50">Aún no has realizado ningún pedido.</p>
+                    <p className="text-foreground">Aún no has realizado ningún pedido.</p>
                 </div>
             ) : (
                 <>
@@ -86,7 +86,7 @@ export default async function OrdersPage(props: PageProps<'/account/orders'>) {
                                                 </Link>
                                             </Button>
                                         </TableCell>
-                                        <TableCell className="text-sm text-white/50">
+                                        <TableCell className="text-sm text-foreground">
                                             {formatDate(order.created_at)}
                                         </TableCell>
                                         <TableCell>

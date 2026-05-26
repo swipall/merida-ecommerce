@@ -27,7 +27,7 @@ export function ProductCard({product}: ProductCardProps) {
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center text-white/50">
+                    <div className="w-full h-full flex items-center justify-center text-foreground">
                         Sin imagen
                     </div>
                 )}
@@ -41,7 +41,7 @@ export function ProductCard({product}: ProductCardProps) {
                         {price ? (
                             <Price value={price} />
                         ) : (
-                            <span className="text-white/50">Precio no disponible</span>
+                            <span className="text-foreground">Precio no disponible</span>
                         )}
                     </p>
                 </Suspense>

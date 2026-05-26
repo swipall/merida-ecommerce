@@ -70,7 +70,7 @@ export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
                           })}
                     </span>
                   </div>
-                  <p className="text-sm text-white/50">
+                  <p className="text-sm text-foreground">
                     Recibirás tu pedido en la dirección especificada
                   </p>
                 </Label>
@@ -83,7 +83,7 @@ export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
                   <Store className="h-5 w-5" />
                   <span className="font-medium">Recoger en tienda</span>
                 </div>
-                <p className="text-sm text-white/50">
+                <p className="text-sm text-foreground">
                   Retira tu pedido en el punto de entrega
                 </p>
               </Label>

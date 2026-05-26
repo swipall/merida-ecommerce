@@ -137,7 +137,7 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
                     <div>
                         <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
                         {/* {product.description && (
-                            <p className="text-white/50 mb-6">{product.description}</p>
+                            <p className="text-foreground mb-6">{product.description}</p>
                         )} */}
                         <ProductInfo product={product} searchParams={searchParamsResolved} />
                     </div>
@@ -159,7 +159,7 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
                                     </svg>
                                 </div>
                                 <h3 className="text-xl font-semibold">Productos Pokémon coleccionables</h3>
-                                <p className="text-white/50">En KOI conectamos a los entrenadores con lo mejor del universo Pokémon TCG. Desde la elegancia de las Premium Collections y el equipo completo de las ETB, hasta la exclusividad de los High Class Packs japoneses.</p>
+                                <p className="text-foreground">En KOI conectamos a los entrenadores con lo mejor del universo Pokémon TCG. Desde la elegancia de las Premium Collections y el equipo completo de las ETB, hasta la exclusividad de los High Class Packs japoneses.</p>
                             </div>
                             <div className="space-y-3">
                                 <div className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
@@ -168,7 +168,7 @@ export default async function ProductDetailPage({ params, searchParams }: PagePr
                                     </svg>
                                 </div>
                                 <h3 className="text-xl font-semibold">Originalidad</h3>
-                                <p className="text-white/50">Originalidad garantizada, envíos rápidos y la mejor selección para tu colección. ¡Haz que tu deck evolucione con KOI!</p>
+                                <p className="text-foreground">Originalidad garantizada, envíos rápidos y la mejor selección para tu colección. ¡Haz que tu deck evolucione con KOI!</p>
                             </div>
                         </div>
                     </div>
