@@ -53,7 +53,7 @@ export async function Footer() {
                                 alt="Koi Collectibles"
                                 width={120}
                                 height={40}
-                                className="h-12 w-auto"
+                                className="h-12 w-auto rounded-md"
                             />
                         </Link>
                     </div>
@@ -64,7 +64,7 @@ export async function Footer() {
                             <h4 className="text-sm font-semibold mb-4 uppercase tracking-wider text-primary">
                                 {menu.title}
                             </h4>
-                            <ul className="space-y-2 text-md text-white">
+                            <ul className="space-y-2 text-md text-muted-foreground">
                                 {menu.items.length === 0 && (
                                     <li className="italic opacity-40">Sin contenido</li>
                                 )}
@@ -73,7 +73,7 @@ export async function Footer() {
                                         {item.link ? (
                                             <Link
                                                 href={item.link}
-                                                className="hover:text-primary transition-colors"
+                                                className="hover:text-primary text-muted-foreground transition-colors"
                                             >
                                                 {item.title}
                                             </Link>

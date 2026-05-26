@@ -24,7 +24,7 @@ export function NavbarUser() {
 
     if (!user) {
         return (
-            <Button variant="ghost" asChild>
+            <Button className='text-primary-foreground bg-primary' variant="ghost" asChild>
                 <LoginButton isLoggedIn={false} />
             </Button>
         );
@@ -36,7 +36,7 @@ export function NavbarUser() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost">
-                    <User className="h-5 w-5" />
+                    <User className="h-5 w-5 text-primary-foreground" />
                     Hola, {firstName}
                 </Button>
             </DropdownMenuTrigger>

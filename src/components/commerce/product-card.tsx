@@ -33,11 +33,11 @@ export function ProductCard({product}: ProductCardProps) {
                 )}
             </div>
             <div className="p-4 space-y-2">
-                <h3 className="font-medium line-clamp-2 group-hover:text-primary transition-colors">
+                <h3 className="font-medium text-muted-foreground line-clamp-2 group-hover:text-primary transition-colors">
                     {product.name}
                 </h3>
                 <Suspense fallback={<div className="h-8 w-36 rounded bg-muted"></div>}>
-                    <p className="text-lg font-bold">
+                    <p className="text-lg font-bold text-primary ">
                         {price ? (
                             <Price value={price} />
                         ) : (

@@ -27,14 +27,14 @@ export function NavbarDropdownItem({ title, href, items }: NavbarDropdownItemPro
         <NavigationMenuItem>
             <NavigationMenuTrigger>{title}</NavigationMenuTrigger>
             <NavigationMenuContent>
-                <ul className="w-48 p-1">
+                <ul className="w-48 p-1 bg-nav-background ">
                     <li>
                         <NavigationMenuLink asChild>
                             <Link
                                 href={href}
                                 className={cn(
-                                    "flex select-none rounded-md px-3 py-2 text-sm font-semibold leading-none no-underline outline-none transition-colors",
-                                    "text-primary hover:bg-primary hover:text-primary-foreground"
+                                    "flex select-none bg-nav-background rounded-md px-3 py-2 text-sm font-semibold leading-none no-underline outline-none transition-colors",
+                                    "text-primary hover:text-white hover:text-primary-foreground"
                                 )}
                             >
                                 Ver todos
@@ -49,7 +49,7 @@ export function NavbarDropdownItem({ title, href, items }: NavbarDropdownItemPro
                                     href={item.link || `/collection/${item.slug}`}
                                     className={cn(
                                         "flex select-none rounded-md px-3 py-2 text-sm leading-none no-underline outline-none transition-colors",
-                                        "hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground"
+                                        "hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground"
                                     )}
                                 >
                                     <span className="font-medium">{item.title}</span>
