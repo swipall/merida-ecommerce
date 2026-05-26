@@ -42,9 +42,12 @@ export default async function OrdersPage(props: PageProps<'/account/orders'>) {
         {
             limit: ITEMS_PER_PAGE,
             offset,
+            kind__in: 'order,requested',
         },
         { useAuthToken: true }
     );
+    console.log(result);
+    
 
     const orders = result.results || [];
     const totalItems = result.count || 0;
