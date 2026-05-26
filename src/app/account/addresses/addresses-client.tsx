@@ -96,7 +96,7 @@ export function AddressesClient({ addresses }: AddressesClientProps) {
 
     return (
         <>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-6">
                 <div>
                     <h1 className="text-3xl font-bold">Mis Direcciones</h1>
                     <p className="text-foreground mt-2">
