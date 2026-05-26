@@ -20,7 +20,7 @@ export function MobileMenu({ children }: MobileMenuProps) {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon" className="md:hidden text-white dark:text-white">
                     <Menu className="h-5 w-5" />
                     <span className="sr-only">Abrir menú</span>
                 </Button>
@@ -29,9 +29,7 @@ export function MobileMenu({ children }: MobileMenuProps) {
                 <div className="flex flex-col h-full">
                     <div className="flex items-center justify-between px-4 py-4 border-b border-border">
                         <span className="font-semibold text-sm uppercase tracking-wider text-primary">Menú</span>
-                        <Button variant="ghost" size="icon" onClick={() => setOpen(false)}>
-                            <X className="h-4 w-4" />
-                        </Button>
+                        
                     </div>
                     <div className="flex-1 overflow-y-auto py-2" onClick={() => setOpen(false)}>
                         {children}
