@@ -1,6 +1,7 @@
 import { getAuthToken } from '@/lib/auth';
 
 const SWIPALL_API_URL = process.env.SWIPALL_SHOP_API_URL || process.env.NEXT_PUBLIC_SWIPALL_SHOP_API_URL;
+
 const SWIPALL_AUTH_TOKEN_HEADER = process.env.SWIPALL_AUTH_TOKEN_HEADER || 'Authorization';
 const IS_BUILD_TIME = process.env.NEXT_PHASE === 'phase-production-build' || process.env.NODE_ENV === 'production' && !process.env.SWIPALL_SHOP_API_URL && !process.env.NEXT_PUBLIC_SWIPALL_SHOP_API_URL;
 
