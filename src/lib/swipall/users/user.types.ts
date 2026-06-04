@@ -14,6 +14,12 @@ export interface AddressInterface {
     mobile?: string;
 }
 
+export interface PriceListInterface {
+    id: string;
+    description: string;
+    minimal_amount: number;
+}
+
 export interface CustomerInfoInterface {
     id: string;
     business_name: string;
@@ -21,8 +27,8 @@ export interface CustomerInfoInterface {
     email: string;
     extra_fields: any[];
     properties: any[];
-    address: AddressInterface
-    price_list?: string;
+    address: AddressInterface;
+    price_list?: PriceListInterface | null;
 }
 
 export interface OrderInterface {
