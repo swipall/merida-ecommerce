@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { fetchAddresses } from '@/lib/swipall/users';
+import { fetchAddressesServer as fetchAddresses } from '@/lib/swipall/users/server';
 import { AddressesClient } from './addresses-client';
 import { AddressInterface } from '@/lib/swipall/users/user.types';
 
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AddressesPage(_props: PageProps<'/account/addresses'>) {
-    const addressesRes = await fetchAddresses({ useAuthToken: true });
+    const addressesRes = await fetchAddresses();
     const addresses: AddressInterface[] = Array.isArray(addressesRes) ? addressesRes : addressesRes.results || [];
 
     return (

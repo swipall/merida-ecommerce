@@ -9,9 +9,11 @@ interface ProductCardProps {
 }
 
 export function ProductCard({product}: ProductCardProps) {
-    const finalPrice = product.price ? parseFloat(product.price) : undefined;
-    const originalPrice = product.web_price ? parseFloat(product.web_price) : undefined;
-    const hasDiscount = finalPrice && originalPrice && originalPrice > finalPrice;
+    const priceVal = product.price ? parseFloat(product.price) : undefined;
+    const webPriceVal = product.web_price ? parseFloat(product.web_price) : undefined;
+    const finalPrice = priceVal ?? webPriceVal;
+    const originalPrice = priceVal && webPriceVal && webPriceVal > priceVal ? webPriceVal : undefined;
+    const hasDiscount = !!originalPrice;
     const imageUrl = product.featured_image || product.pictures?.[0]?.url;
     return (
         <Link

@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { getCustomerInfo } from './swipall/users';
+import { getCustomerInfoServer } from './swipall/users/server';
 
 const AUTH_TOKEN_COOKIE = process.env.SWIPALL_AUTH_TOKEN_COOKIE || 'swipall-auth-token';
 const REFRESH_TOKEN_COOKIE = process.env.SWIPALL_REFRESH_TOKEN_COOKIE || 'swipall-refresh-token';
@@ -93,7 +93,7 @@ export async function getAuthUserCustomerId(): Promise<string | undefined> {
     try {
         const token = await getAuthToken();
         if (!token) return undefined;
-        const customerInfo = await getCustomerInfo({ useAuthToken: true });
+        const customerInfo = await getCustomerInfoServer();
         return customerInfo.id;
     } catch {
         return undefined;

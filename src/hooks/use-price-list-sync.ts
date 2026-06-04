@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef } from 'react';
 import { getAuthUser, setAuthUser } from '@/lib/auth-client';
-import { getCustomerInfo } from '@/lib/swipall/users';
+import { getCustomerInfoAction } from '@/app/account/actions';
 import { PriceListInterface } from '@/lib/swipall/users/user.types';
 
 export interface PriceListSyncResult {
@@ -27,7 +27,8 @@ export function usePriceListSync(onPriceListChanged: (result: PriceListSyncResul
 
         isSyncing.current = true;
         try {
-            const remoteInfo = await getCustomerInfo({ useAuthToken: true });
+            const remoteInfo = await getCustomerInfoAction();
+            if (!remoteInfo) return;
             const localPriceListId = localUser.price_list?.id ?? null;
             const remotePriceListId = remoteInfo.price_list?.id ?? null;
 

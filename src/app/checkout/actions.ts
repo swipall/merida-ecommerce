@@ -9,7 +9,7 @@ import {
     setOrderRequested,
 } from '@/lib/swipall/rest-adapter';
 import { InterfaceInventoryItem, ShopCart } from '@/lib/swipall/types/types';
-import { createAddress, createCustomerInfo } from '@/lib/swipall/users';
+import { createAddressServer, createCustomerInfoServer } from '@/lib/swipall/users/server';
 import { AddressInterface } from '@/lib/swipall/users/user.types';
 import { revalidatePath } from 'next/cache';
 import { getAuthUserCustomerId } from '@/lib/auth';
@@ -42,7 +42,7 @@ export async function registerCustomerInfo(address: Partial<AddressInterface>): 
     address: AddressInterface;
 }> {
     try {
-        const result = await createCustomerInfo(address, { useAuthToken: true });
+        const result = await createCustomerInfoServer(address);
         revalidatePath('/checkout');
         return result;
     } catch (error) {
@@ -52,7 +52,7 @@ export async function registerCustomerInfo(address: Partial<AddressInterface>): 
 
 export async function createCustomerAddress(address: Partial<AddressInterface>): Promise<AddressInterface> {
     try {
-        const result = await createAddress(address, { useAuthToken: true });
+        const result = await createAddressServer(address);
         revalidatePath('/checkout');
         return result;
     } catch (error) {

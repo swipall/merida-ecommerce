@@ -3,6 +3,7 @@ import { getPosts } from "@/lib/swipall/rest-adapter";
 import { HomeSectionRenderer } from "./home-section-renderer";
 import { getHomeBlockType } from "./home-section-types";
 import type { CmsPost } from "@/lib/swipall/types/types";
+import { Suspense } from "react";
 
 const HOME_PARENT_SLUG = "ecommerce-home";
 
@@ -25,7 +26,9 @@ export async function HomePageComponent() {
     return (
         <div className="min-h-screen mt-[120px] sm:mt-14">
             {blocks.map((post) => (
-                <HomeSectionRenderer key={post.slug} post={post} />
+                <Suspense key={post.slug} fallback={null}>
+                    <HomeSectionRenderer post={post} />
+                </Suspense>
             ))}
         </div>
     );
