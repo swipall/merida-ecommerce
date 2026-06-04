@@ -30,7 +30,7 @@ export async function addToCart(
         const product = await getProduct(itemId, customerId);        
         const strategyFactory = new AddItemStrategyFactory(shopModel);
         const strategy = strategyFactory.getStrategy(product);
-        const result = await strategy.addItemToCart(cartId, itemId, params);
+        const result = await strategy.addItemToCart(cartId, itemId, params, product);
         updateTag('cart');
         updateTag('active-order');
 
