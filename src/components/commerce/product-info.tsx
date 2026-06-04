@@ -42,10 +42,10 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
     const [selectedMaterials, setSelectedMaterials] = useState<Material[]>([]);
 
     const itemPrice = useMemo(() => {
-        let basePrice = product.web_price ? parseFloat(product.web_price) : 0;
+        let basePrice = product.price ? parseFloat(product.price) : 0;
 
         if (product.kind === ProductKind.Group && selectedVariant) {
-            basePrice = parseFloat(selectedVariant.web_price);
+            basePrice = parseFloat(selectedVariant.price);
         }
 
         if (product.kind === ProductKind.Compound) {
@@ -58,6 +58,16 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
 
         return basePrice;
     }, [product, selectedVariant, selectedMaterials]);
+
+    const originalPrice = useMemo(() => {
+        if (product.kind === ProductKind.Group && selectedVariant) {
+            const orig = parseFloat(selectedVariant.web_price);
+            return orig > parseFloat(selectedVariant.price) ? orig : undefined;
+        }
+        const orig = product.web_price ? parseFloat(product.web_price) : 0;
+        const final = product.price ? parseFloat(product.price) : 0;
+        return orig > final ? orig : undefined;
+    }, [product, selectedVariant]);
 
     const materialIdToTaxonomy = useMemo(() => {
         const map = new Map<string, string>();
@@ -255,9 +265,16 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                 )
             )}
             <div className='flex items-center gap-2'>
-                <p className="text-2xl font-bold">
-                    <Price value={itemPrice} />
-                </p>
+                <div className="flex flex-col">
+                    <p className="text-2xl font-bold">
+                        <Price value={itemPrice} />
+                    </p>
+                    {originalPrice && (
+                        <p className="text-sm text-muted-foreground line-through">
+                            <Price value={originalPrice} />
+                        </p>
+                    )}
+                </div>
                 <div className="text-sm">
                     {isInStock ? (
                         <span className="bg-emerald-200 text-emerald-900 font-bold px-2 py-1 rounded-full">

@@ -2,17 +2,21 @@ import { cacheLife } from "next/cache";
 import { getPosts } from "@/lib/swipall/rest-adapter";
 import { HomeSectionRenderer } from "./home-section-renderer";
 import { getHomeBlockType } from "./home-section-types";
+import type { CmsPost } from "@/lib/swipall/types/types";
 
 const HOME_PARENT_SLUG = "ecommerce-home";
 
-export async function HomePageComponent() {
+async function getHomeBlocks(): Promise<CmsPost[]> {
     "use cache";
     cacheLife("hours");
-
     const postsResponse = await getPosts({ parent__slug: HOME_PARENT_SLUG });
-    const blocks = (postsResponse.results ?? [])
+    return (postsResponse.results ?? [])
         .filter((post) => getHomeBlockType(post))
         .sort((a, b) => (a.ordering ?? 0) - (b.ordering ?? 0));
+}
+
+export async function HomePageComponent() {
+    const blocks = await getHomeBlocks();
 
     if (blocks.length === 0) {
         return null;

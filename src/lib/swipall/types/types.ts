@@ -117,6 +117,7 @@ export interface InterfaceInventoryItem {
     sku: string;
     slug: string;
     taxonomy: TaxonomyInterface[];
+    price: string;
     web_price: string;
     extra_materials?: any[];
     description?: string;
@@ -130,6 +131,7 @@ export interface ProductVariant {
     id: string;
     slug: string;
     name: string;
+    price: string;
     web_price: string;
     sku: string;
     barcode: string | null;

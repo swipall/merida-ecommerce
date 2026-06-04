@@ -9,9 +9,10 @@ interface ProductCardProps {
 }
 
 export function ProductCard({product}: ProductCardProps) {
-    const price = product.web_price ? parseFloat(product.web_price) : undefined;
+    const finalPrice = product.price ? parseFloat(product.price) : undefined;
+    const originalPrice = product.web_price ? parseFloat(product.web_price) : undefined;
+    const hasDiscount = finalPrice && originalPrice && originalPrice > finalPrice;
     const imageUrl = product.featured_image || product.pictures?.[0]?.url;
-
     return (
         <Link
             href={`/product/${product.id}`}
@@ -37,13 +38,20 @@ export function ProductCard({product}: ProductCardProps) {
                     {product.name}
                 </h3>
                 <Suspense fallback={<div className="h-8 w-36 rounded bg-muted"></div>}>
-                    <p className="text-lg font-bold text-primary ">
-                        {price ? (
-                            <Price value={price} />
+                    <div className="flex flex-col gap-0.5">
+                        {finalPrice ? (
+                            <p className="text-lg font-bold text-primary">
+                                <Price value={finalPrice} />
+                            </p>
                         ) : (
                             <span className="text-foreground">Precio no disponible</span>
                         )}
-                    </p>
+                        {hasDiscount && (
+                            <p className="text-sm text-muted-foreground line-through">
+                                <Price value={originalPrice} />
+                            </p>
+                        )}
+                    </div>
                 </Suspense>
             </div>
         </Link>
