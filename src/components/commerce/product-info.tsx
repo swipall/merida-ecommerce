@@ -42,11 +42,25 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
     const [selectedMaterials, setSelectedMaterials] = useState<Material[]>([]);
 
     const itemPrice = useMemo(() => {
-        let basePrice = product.price ? parseFloat(product.price) : 0;
-
         if (product.kind === ProductKind.Group && selectedVariant) {
-            basePrice = parseFloat(selectedVariant.price);
+            const variantPrice = parseFloat(selectedVariant.price) || 0;
+            const variantWebPrice = parseFloat(selectedVariant.web_price) || 0;
+            const basePrice = variantPrice || variantWebPrice;
+
+            if (product.kind === ProductKind.Compound) {
+                const materialsPrice = selectedMaterials.reduce(
+                    (sum, material) => sum + (parseFloat(material.price) || 0),
+                    0
+                );
+                return basePrice + materialsPrice;
+            }
+
+            return basePrice;
         }
+
+        const priceVal = parseFloat(product.price) || 0;
+        const webPriceVal = parseFloat(product.web_price) || 0;
+        const basePrice = priceVal || webPriceVal;
 
         if (product.kind === ProductKind.Compound) {
             const materialsPrice = selectedMaterials.reduce(
@@ -61,12 +75,14 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
 
     const originalPrice = useMemo(() => {
         if (product.kind === ProductKind.Group && selectedVariant) {
-            const orig = parseFloat(selectedVariant.web_price);
-            return orig > parseFloat(selectedVariant.price) ? orig : undefined;
+            const variantPrice = parseFloat(selectedVariant.price) || 0;
+            const variantWebPrice = parseFloat(selectedVariant.web_price) || 0;
+            return variantWebPrice > variantPrice ? variantWebPrice : undefined;
         }
-        const orig = product.web_price ? parseFloat(product.web_price) : 0;
-        const final = product.price ? parseFloat(product.price) : 0;
-        return orig > final ? orig : undefined;
+        const priceVal = parseFloat(product.price) || 0;
+        const webPriceVal = parseFloat(product.web_price) || 0;
+        const finalPrice = priceVal || webPriceVal;
+        return webPriceVal > finalPrice ? webPriceVal : undefined;
     }, [product, selectedVariant]);
 
     const materialIdToTaxonomy = useMemo(() => {
