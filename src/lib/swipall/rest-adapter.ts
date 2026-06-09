@@ -381,7 +381,7 @@ export async function updateCustomerEmailAddress(token: string, options?: { useA
 
 export async function getShippingQuotes(cartId: string, addressId: string): Promise<InterfaceApiShippingQuoteResponse> {
     return post<InterfaceApiShippingQuoteResponse>(
-        `/api/ecommerce/me/cart/${cartId}/shipping/quote/`,
+        `/api/v1/shop/me/cart/${cartId}/shipping/quote/`,
         { address_id: addressId },
         { useAuthToken: true }
     );
@@ -389,7 +389,7 @@ export async function getShippingQuotes(cartId: string, addressId: string): Prom
 
 export async function setShipmentRate(shipmentId: string, rate: ShippingRate): Promise<void> {
     await patch(
-        `/api/ecommerce/me/shipping/${shipmentId}/set/rate/`,
+        `/api/v1/shop/me/shipping/${shipmentId}/set/rate/`,
         { rate },
         { useAuthToken: true }
     );

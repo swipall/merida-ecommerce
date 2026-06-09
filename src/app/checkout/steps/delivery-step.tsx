@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ShipmentQuote, ShippingRate } from '@/lib/swipall/types/types';
-import { Loader2, Package, Store, Truck } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Loader2, Package, RefreshCw, Store, Truck } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { getShippingQuotesAction, injectShippingServiceItemAction, setShipmentRatesAction, updateCartForPickup } from '../actions';
 import { useCheckout } from '../checkout-provider';
@@ -37,6 +37,22 @@ export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
 
   const addressId = order.shipment_address?.id ?? null;
 
+  const fetchQuotes = useCallback(async () => {
+    if (!addressId) return;
+    setQuotesLoading(true);
+    setQuotesError(null);
+    try {
+      const response = await getShippingQuotesAction(addressId);      
+      setShipments(response.shipments ?? []);
+      setFreeShipping(response.free_shipping);
+      setSelectedRates([]);
+    } catch {
+      setQuotesError('No se pudieron obtener las opciones de envío. Intenta de nuevo.');
+    } finally {
+      setQuotesLoading(false);
+    }
+  }, [addressId]);
+
   useEffect(() => {
     if (localFulfillmentType !== 'delivery' || !addressId) {
       setShipments([]);
@@ -44,37 +60,8 @@ export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
       setQuotesError(null);
       return;
     }
-
-    let cancelled = false;
-
-    const fetchQuotes = async () => {
-      setQuotesLoading(true);
-      setQuotesError(null);
-      try {
-        const response = await getShippingQuotesAction(addressId);
-        console.log('Shipping quotes response:', response);
-        if (!cancelled) {
-          setShipments(response.shipments ?? []);
-          setFreeShipping(response.free_shipping);
-          setSelectedRates([]);
-        }
-      } catch {
-        if (!cancelled) {
-          setQuotesError('No se pudieron obtener las opciones de envío. Intenta de nuevo.');
-        }
-      } finally {
-        if (!cancelled) {
-          setQuotesLoading(false);
-        }
-      }
-    };
-
     fetchQuotes();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [localFulfillmentType, addressId]);
+  }, [localFulfillmentType, addressId, fetchQuotes]);
 
   const handleRateSelect = async (shipmentId: string, rate: ShippingRate) => {
     setSelectedRates(prev => {
@@ -166,8 +153,16 @@ export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
           {addressId && quotesLoading && <ShippingQuotesSkeleton />}
 
           {addressId && quotesError && (
-            <div className="text-sm text-destructive border border-destructive/30 rounded-lg p-3">
-              {quotesError}
+            <div className="flex items-center justify-between text-sm text-destructive border border-destructive/30 rounded-lg p-3">
+              <span>{quotesError}</span>
+              <button
+                type="button"
+                onClick={fetchQuotes}
+                className="ml-3 shrink-0 hover:opacity-70 transition-opacity"
+                aria-label="Reintentar"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </button>
             </div>
           )}
 
