@@ -8,7 +8,7 @@ import { useCheckout } from './checkout-provider';
 import { Price } from '@/components/commerce/price';
 
 export default function OrderSummary() {
-    const { order } = useCheckout();
+    const { order, fulfillmentType } = useCheckout();
     return (
         <Card className="sticky top-4">
             <CardHeader>
@@ -65,14 +65,23 @@ export default function OrderSummary() {
 
                     {(() => {
                         const shippingLine = order.lines?.find((line: OrderLine) => line.item.name.toUpperCase().includes('ENVIO'));
-                        return shippingLine ? (
-                            <div className="flex justify-between text-sm">
-                                <span className="text-foreground">Envío</span>
-                                <span>
-                                    <Price value={Number(shippingLine.total)} />
-                                </span>
-                            </div>
-                        ) : null;
+                        if (shippingLine) {
+                            return (
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-foreground">Envío</span>
+                                    <span><Price value={Number(shippingLine.total)} /></span>
+                                </div>
+                            );
+                        }
+                        if (fulfillmentType === 'delivery') {
+                            return (
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-foreground">Envío</span>
+                                    <span className="text-muted-foreground">Pendiente</span>
+                                </div>
+                            );
+                        }
+                        return null;
                     })()}
 
                     {order.tax_total && Number(order.tax_total) > 0 && (
