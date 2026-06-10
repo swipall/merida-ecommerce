@@ -262,7 +262,7 @@ export const addProductToCart = async (cartId: string, body: AddProductToCartBod
     return post<InterfaceApiDetailResponse<ShopCartItem>>(`/api/v1/shop/cart/${cartId}/item/add/`, body);
 }
 
-export const updateProductInCart = async (itemId: string, body: { quantity: number }): Promise<InterfaceApiDetailResponse<ShopCartItem>> => {
+export const updateProductInCart = async (itemId: string, body: { quantity: number; price?: number }): Promise<InterfaceApiDetailResponse<ShopCartItem>> => {
     return patch<InterfaceApiDetailResponse<ShopCartItem>>(`/api/v1/shop/cart/item/set/${itemId}/`, body);
 }
 

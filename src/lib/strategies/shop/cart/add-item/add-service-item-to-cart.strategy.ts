@@ -15,7 +15,7 @@ export class AddServiceItemToCartStrategy implements AddItemToCartStrategy {
 
         if (result.count > 0) {
             const itemInCart = result.results[0];
-            return this.shopModel.updateItemInCart(cartId, itemInCart.id, { quantity: body.quantity });
+            return this.shopModel.updateItemInCart(cartId, itemInCart.id, { quantity: body.quantity, price: body.price });
         }
 
         return this.shopModel.addItemToCart(cartId, { id: itemId } as InterfaceInventoryItem, body);
