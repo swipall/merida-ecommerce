@@ -63,18 +63,11 @@ export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
     fetchQuotes();
   }, [localFulfillmentType, addressId, fetchQuotes]);
 
-  const handleRateSelect = async (shipmentId: string, rate: ShippingRate) => {
+  const handleRateSelect = (shipmentId: string, rate: ShippingRate) => {
     setSelectedRates(prev => {
       const without = prev.filter(s => s.shipmentId !== shipmentId);
       return [...without, { shipmentId, rate }];
     });
-
-    try {
-      const updatedOrder = await injectShippingServiceItemAction(rate.amount, freeShipping);
-      if (updatedOrder) setOrder(updatedOrder);
-    } catch {
-      toast.error('Error', { description: 'No se pudo actualizar el costo de envío en el carrito' });
-    }
   };
 
   const allShipmentsSelected = freeShipping
@@ -93,7 +86,8 @@ export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
           const updatedOrder = await injectShippingServiceItemAction(0, true);
           if (updatedOrder) setOrder(updatedOrder);
         } else {
-          await setShipmentRatesAction(selectedRates);
+          const updatedOrder = await setShipmentRatesAction(selectedRates);
+          if (updatedOrder) setOrder(updatedOrder);
         }
         setFulfillmentType('delivery');
       } else {

@@ -231,10 +231,12 @@ export async function getShippingQuotesAction(addressId: string): Promise<Interf
 
 export async function setShipmentRatesAction(
     shipments: { shipmentId: string; rate: ShippingRate }[]
-): Promise<void> {
+): Promise<Order | null> {
     await Promise.all(
         shipments.map(({ shipmentId, rate }) => setShipmentRate(shipmentId, rate))
     );
+    const totalAmount = shipments.reduce((sum, { rate }) => sum + rate.amount, 0);
+    return injectShippingServiceItemAction(totalAmount, false);
 }
 
 export async function injectShippingServiceItemAction(rateAmount: number, isFreeShipping: boolean): Promise<Order | null> {
