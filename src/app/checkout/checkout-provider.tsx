@@ -49,9 +49,8 @@ export function CheckoutProvider({
   );
   
   const [fulfillmentType, setFulfillmentType] = useState<FulfillmentType>(() => {
-    if (order.for_delivery) return 'delivery';
     if (order.for_pickup) return 'pickup';
-    return null;
+    return 'delivery';
   });
 
   return (

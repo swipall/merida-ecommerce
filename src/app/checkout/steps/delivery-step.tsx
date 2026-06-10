@@ -25,7 +25,7 @@ interface SelectedRate {
 export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
   const { order, deliveryItem, fulfillmentType, setFulfillmentType } = useCheckout();
   const [localFulfillmentType, setLocalFulfillmentType] = useState<FulfillmentType>(
-    fulfillmentType || (order.for_delivery ? 'delivery' : 'pickup')
+    fulfillmentType ?? 'delivery'
   );
 
   const [shipments, setShipments] = useState<ShipmentQuote[]>([]);
