@@ -100,4 +100,5 @@ export interface OrderDetailInterface {
     };
     for_delivery: boolean;
     for_pickup: boolean;
+    shipment_id: string | null;
 }

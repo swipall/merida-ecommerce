@@ -3,6 +3,7 @@ import PaymentTypeTextComponent from '@/components/commerce/order-payment-type';
 import OrderStatusComponent from '@/components/commerce/order-status';
 import { Price } from '@/components/commerce/price';
 import ProductExtraMaterialsComponent from '@/components/commerce/product-extra-materials';
+import ShipmentTracking from '@/components/commerce/shipment-tracking';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -36,6 +37,7 @@ export default async function OrderDetailPage(props: PageProps<'/account/orders/
     }
 
     const orderRes = await getOrderDetail(code, { useAuthToken: true });
+    console.log('Order Detail Response:', orderRes);
     const order: OrderDetailInterface = orderRes;
     if (!order) {
         return redirect('/account/orders');
@@ -191,6 +193,11 @@ export default async function OrderDetailPage(props: PageProps<'/account/orders/
                                 <p className="text-foreground  mt-2">Estado: <OrderIsPaidComponent isPaid={order.is_paid} kind={order.kind} /></p>
                             </CardContent>
                         </Card>
+                    )}
+
+                    {/* Shipment Tracking */}
+                    {order.shipment_id && (
+                        <ShipmentTracking shipmentId={order.shipment_id} />
                     )}
 
                     {/* Delivery Type */}

@@ -366,6 +366,43 @@ export async function getOrderDetail(code: string, options?: { useAuthToken?: bo
     return get<OrderDetailInterface>(`/api/v1/shop/me/order/${code}`, undefined, { useAuthToken: options?.useAuthToken });
 }
 
+export interface ShipmentTrackingEvent {
+    date_time: string;
+    description: string;
+    code: string;
+    area: string;
+}
+
+export interface ShipmentTrackingData {
+    status_code: string;
+    status_description: string;
+    carrier: string;
+    tracking_number: string;
+    events: ShipmentTrackingEvent[];
+    address_to: {
+        name: string;
+        city: string;
+        state: string;
+    };
+}
+
+export interface ShipmentTrackingResponse {
+    id: string;
+    label: {
+        id: number;
+        label_url: string;
+        tracking_url: string;
+        tracking_number: string;
+    } | null;
+    kind: string;
+    status: number;
+    tracking: ShipmentTrackingData | null;
+}
+
+export async function getShipmentTracking(shipmentId: string): Promise<ShipmentTrackingResponse> {
+    return get<ShipmentTrackingResponse>(`/api/v1/shop/me/shipping/${shipmentId}/tracking`, undefined, { useAuthToken: true });
+}
+
 
 // ============================================================================
 // Email Verification Endpoints
