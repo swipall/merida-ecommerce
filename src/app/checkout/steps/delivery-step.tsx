@@ -23,7 +23,7 @@ interface SelectedRate {
 }
 
 export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
-  const { order, deliveryItem, fulfillmentType, setFulfillmentType } = useCheckout();
+  const { order, setOrder, deliveryItem, fulfillmentType, setFulfillmentType } = useCheckout();
   const [localFulfillmentType, setLocalFulfillmentType] = useState<FulfillmentType>(
     fulfillmentType ?? 'delivery'
   );
@@ -70,7 +70,8 @@ export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
     });
 
     try {
-      await injectShippingServiceItemAction(rate.amount, freeShipping);
+      const updatedOrder = await injectShippingServiceItemAction(rate.amount, freeShipping);
+      if (updatedOrder) setOrder(updatedOrder);
     } catch {
       toast.error('Error', { description: 'No se pudo actualizar el costo de envío en el carrito' });
     }
@@ -89,7 +90,8 @@ export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
           return;
         }
         if (freeShipping) {
-          await injectShippingServiceItemAction(0, true);
+          const updatedOrder = await injectShippingServiceItemAction(0, true);
+          if (updatedOrder) setOrder(updatedOrder);
         } else {
           await setShipmentRatesAction(selectedRates);
         }

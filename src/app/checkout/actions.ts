@@ -9,8 +9,9 @@ import {
     setOrderRequested,
     getShippingQuotes,
     setShipmentRate,
+    getActiveOrder,
 } from '@/lib/swipall/rest-adapter';
-import { InterfaceApiShippingQuoteResponse, InterfaceInventoryItem, ShopCart, ShippingRate } from '@/lib/swipall/types/types';
+import { InterfaceApiShippingQuoteResponse, InterfaceInventoryItem, Order, ShopCart, ShippingRate } from '@/lib/swipall/types/types';
 import { createAddressServer, createCustomerInfoServer } from '@/lib/swipall/users/server';
 import { AddressInterface } from '@/lib/swipall/users/user.types';
 import { revalidatePath } from 'next/cache';
@@ -236,7 +237,7 @@ export async function setShipmentRatesAction(
     );
 }
 
-export async function injectShippingServiceItemAction(rateAmount: number, isFreeShipping: boolean): Promise<void> {
+export async function injectShippingServiceItemAction(rateAmount: number, isFreeShipping: boolean): Promise<Order | null> {
     const customerId = await getAuthUserCustomerId();
     const shopModel = useShopModel();
     const cartId = await shopModel.getCurrentCartId();
@@ -244,7 +245,7 @@ export async function injectShippingServiceItemAction(rateAmount: number, isFree
         throw new Error('No cart ID found while injecting shipping service item');
     }
     const results = await shopModel.fetchDeliveryConcept(customerId);
-    if (results.length === 0) return;
+    if (results.length === 0) return null;
     const deliveryServiceItem = results[0];
     const price = isFreeShipping ? 0 : rateAmount;
     const { AddItemStrategyFactory } = await import('@/lib/strategies/shop/cart/add-item');
@@ -252,5 +253,6 @@ export async function injectShippingServiceItemAction(rateAmount: number, isFree
     const itemWithPrice = { ...deliveryServiceItem, web_price: String(price) };
     const strategy = factory.getStrategy(itemWithPrice);
     await strategy.addItemToCart(cartId, itemWithPrice.id, { item: itemWithPrice.id, quantity: 1, price }, itemWithPrice);
+    return getActiveOrder({ useAuthToken: true, mutateCookies: false });
 }
 

@@ -18,6 +18,7 @@ export type FulfillmentType = 'delivery' | 'pickup' | null;
 
 interface CheckoutContextType {
   order: CheckoutOrder;
+  setOrder: (order: CheckoutOrder) => void;
   addresses: AddressInterface[];
   paymentMethods: PaymentMethodsInterface[];
   selectedPaymentMethodCode: string | null;
@@ -39,17 +40,18 @@ interface CheckoutProviderProps {
 
 export function CheckoutProvider({
   children,
-  order,
+  order: initialOrder,
   addresses,
   paymentMethods,
   deliveryItem,
-}: CheckoutProviderProps) {    
+}: CheckoutProviderProps) {
   const [selectedPaymentMethodCode, setSelectedPaymentMethodCode] = useState<string | null>(
     paymentMethods.length > 0 ? paymentMethods[0].id : null
   );
-  
+
+  const [order, setOrder] = useState<CheckoutOrder>(initialOrder);
   const [fulfillmentType, setFulfillmentType] = useState<FulfillmentType>(() => {
-    if (order.for_pickup) return 'pickup';
+    if (initialOrder.for_pickup) return 'pickup';
     return 'delivery';
   });
 
@@ -57,6 +59,7 @@ export function CheckoutProvider({
     <CheckoutContext.Provider
       value={{
         order,
+        setOrder,
         addresses,
         paymentMethods,
         selectedPaymentMethodCode,
