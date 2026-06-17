@@ -12,17 +12,26 @@ import ShippingAddressStep from './steps/shipping-address-step';
 type CheckoutStep = 'contact' | 'shipping' | 'delivery' | 'payment' | 'review';
 
 export default function CheckoutFlow() {
-    const { fulfillmentType } = useCheckout();   
+    const { fulfillmentType, order } = useCheckout();
 
-    const getStepOrder = (): CheckoutStep[] => {
-        return ['shipping', 'delivery', 'payment', 'review'];
-    };
-
-    const stepOrder = getStepOrder();
+    const stepOrder: CheckoutStep[] = ['shipping', 'delivery', 'payment', 'review'];
 
     const getInitialState = () => {
         const completed = new Set<CheckoutStep>();
+
+        const hasShippingAddress = !!order.shipment_address;
+        const hasShippingLine = order.lines.some(l => l.item.name.toUpperCase().includes('ENVIO'));
+
+        if (hasShippingAddress || order.for_pickup) completed.add('shipping');
+        if (hasShippingLine || order.for_pickup) completed.add('delivery');
+
         let current: CheckoutStep = stepOrder[0];
+        for (const step of stepOrder) {
+            if (!completed.has(step)) { current = step; break; }
+        }
+        // If all pre-completable steps are done, land on payment
+        if (completed.has('shipping') && completed.has('delivery')) current = 'payment';
+
         return { completed, current };
     };
 
