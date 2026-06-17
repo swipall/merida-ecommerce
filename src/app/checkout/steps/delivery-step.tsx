@@ -46,8 +46,9 @@ export default function DeliveryStep({ onComplete }: DeliveryStepProps) {
       setShipments(response.shipments ?? []);
       setFreeShipping(response.free_shipping);
       setSelectedRates([]);
-    } catch {
-      setQuotesError('No se pudieron obtener las opciones de envío. Intenta de nuevo.');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'No se pudieron obtener las opciones de envío. Intenta de nuevo.';
+      setQuotesError(message);
     } finally {
       setQuotesLoading(false);
     }
