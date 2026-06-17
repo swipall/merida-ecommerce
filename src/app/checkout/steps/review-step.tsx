@@ -101,9 +101,11 @@ export default function ReviewStep({ onEditStep }: ReviewStepProps) {
                                 <>
                                     <p className="font-medium">Entrega a domicilio</p>
                                     <p className="text-foreground">
-                                        {shippingPrice !== null && shippingPrice > 0
-                                            ? <Price value={shippingPrice} />
-                                            : 'GRATIS'}
+                                        {shippingPrice !== null
+                                            ? shippingPrice > 0 ? <Price value={shippingPrice} /> : 'GRATIS'
+                                            : deliveryItem && parseFloat(deliveryItem.price) > 0
+                                                ? <Price value={Number(deliveryItem.price)} />
+                                                : 'GRATIS'}
                                     </p>
                                 </>
                             ) : isForPickup ? (
