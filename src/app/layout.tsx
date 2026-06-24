@@ -1,9 +1,10 @@
 import type {Metadata, Viewport} from "next";
-import {Geist, Geist_Mono} from "next/font/google";
+import {Geist, Geist_Mono, Jost, Inter} from "next/font/google";
 import "./globals.css";
 import {Toaster} from "@/components/ui/sonner";
 import {Navbar} from "@/components/layout/navbar";
 import {Footer} from "@/components/layout/footer";
+import {MobileBottomNav} from "@/components/layout/mobile-bottom-nav";
 import {ThemeProvider} from "@/components/providers/theme-provider";
 import {PriceListProvider} from "@/components/providers/price-list-provider";
 import {SITE_NAME, SITE_URL} from "@/lib/metadata";
@@ -16,6 +17,20 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
     subsets: ["latin"],
+});
+
+const jost = Jost({
+    variable: "--font-jost",
+    subsets: ["latin"],
+    weight: ["400", "600", "700", "800"],
+    display: "swap",
+});
+
+const inter = Inter({
+    variable: "--font-inter",
+    subsets: ["latin"],
+    weight: ["300", "400", "500"],
+    display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -61,13 +76,14 @@ export default function RootLayout({children}: LayoutProps<'/'>) {
     return (
         <html lang="en" suppressHydrationWarning>
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+                className={`${geistSans.variable} ${geistMono.variable} ${jost.variable} ${inter.variable} antialiased flex flex-col min-h-screen pb-16 md:pb-0`}
             >
                 <ThemeProvider>
                     <PriceListProvider>
                         <Navbar />
                         {children}
                         <Footer />
+                        <MobileBottomNav />
                         <Toaster />
                     </PriceListProvider>
                 </ThemeProvider>

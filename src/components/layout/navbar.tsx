@@ -1,66 +1,67 @@
 import Image from "next/image";
 import Link from "next/link";
 import { NavbarCollections } from '@/components/layout/navbar/navbar-collections';
-import { NavbarCollectionsMobile } from '@/components/layout/navbar/navbar-collections-mobile';
 import { NavbarCart } from '@/components/layout/navbar/navbar-cart';
 import { NavbarUser } from '@/components/layout/navbar/navbar-user';
-import { MobileMenu } from '@/components/layout/navbar/mobile-menu';
-import { ThemeSwitcher } from '@/components/layout/navbar/theme-switcher';
+import { NavbarMobileHeader } from '@/components/layout/navbar/navbar-mobile-header';
 import { Suspense } from "react";
 import { SearchInput } from '@/components/layout/search-input';
 import { SearchInputSkeleton } from '@/components/shared/skeletons/search-input-skeleton';
 
+const LOGO_URL =
+    "https://mmcb.b-cdn.net/media/attachments/f/f/e/6/c77a2aed2634f9a90555c2db1507cad8ea06a1c4bf34c2e46ac3aeab0f61/logo-merida.png";
+
+const cartSlot = (
+    <Suspense fallback={<div className="w-8 h-8" />}>
+        <NavbarCart />
+    </Suspense>
+);
+
 export function Navbar() {
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-nav-background  border-b border-border/40">
-            <div className="container mx-auto px-4">
-                <div className="flex items-center justify-between py-2">
-                    {/* Left: hamburger (mobile) + logo + desktop nav */}
-                    <div className="flex items-center gap-3">
+        <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
+            {/* Promo bar */}
+            <div className="bg-black text-white text-xs text-center py-2 tracking-widest font-medium font-jost uppercase">
+                ENVÍO GRATIS EN PEDIDOS DESDE $2,000 MXN — MAYOREO DESDE 6 PIEZAS
+            </div>
+
+            {/* Mobile header (< md) */}
+            <NavbarMobileHeader logoUrl={LOGO_URL} cart={cartSlot} />
+
+            {/* Desktop header (≥ md) */}
+            <div className="hidden md:block max-w-7xl mx-auto px-4 lg:px-8">
+                <div className="flex items-center gap-4 h-16">
+                    {/* Logo */}
+                    <Link href="/" className="flex-shrink-0">
+                        <Image
+                            src={LOGO_URL}
+                            alt="Mérida Mayoreo"
+                            width={120}
+                            height={32}
+                            className="h-10 w-auto object-contain"
+                            priority
+                        />
+                    </Link>
+
+                    {/* Nav with dropdowns — lg+ */}
+                    <nav className="hidden lg:flex items-center flex-1 justify-center">
                         <Suspense>
-                            <MobileMenu>
-                                <NavbarCollectionsMobile />
-                            </MobileMenu>
+                            <NavbarCollections />
                         </Suspense>
+                    </nav>
 
-                        <Link href="/" className="flex-shrink-0">
-                            <Image
-                                src="https://mmcb.b-cdn.net/media/attachments/0/c/4/0/60593b52331c1146353026da4cbc9ffbfd78b635db83fca47b25690df620/logo.jpg"
-                                alt="Swipall"
-                                width={40}
-                                height={27}
-                                className="h-14 w-auto"
-                            />
-                        </Link>
-
-                        <nav className="hidden md:flex items-center gap-6">
-                            <Suspense>
-                                <NavbarCollections />
-                            </Suspense>
-                        </nav>
+                    {/* Search pill */}
+                    <div className="flex flex-1 lg:flex-none lg:w-64">
+                        <Suspense fallback={<SearchInputSkeleton />}>
+                            <SearchInput />
+                        </Suspense>
                     </div>
 
-                    {/* Right: search (desktop) + cart + user */}
-                    <div className="flex items-center gap-2">
-                        <div className="hidden lg:flex">
-                            <Suspense fallback={<SearchInputSkeleton />}>
-                                <SearchInput />
-                            </Suspense>
-                        </div>
-
-                        <ThemeSwitcher />
-                        <Suspense>
-                            <NavbarCart />
-                        </Suspense>
+                    {/* User + Cart */}
+                    <div className="flex items-center gap-1 shrink-0">
                         <NavbarUser />
+                        {cartSlot}
                     </div>
-                </div>
-
-                {/* Mobile: buscador debajo de la barra principal */}
-                <div className="lg:hidden pb-2">
-                    <Suspense fallback={<SearchInputSkeleton />}>
-                        <SearchInput />
-                    </Suspense>
                 </div>
             </div>
         </header>

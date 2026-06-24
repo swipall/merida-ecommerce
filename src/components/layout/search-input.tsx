@@ -1,9 +1,8 @@
 'use client';
 
-import {useState, useEffect, useTransition} from 'react';
-import {useRouter, useSearchParams} from 'next/navigation';
-import {Search} from 'lucide-react';
-import {Input} from '@/components/ui/input';
+import { useState, useEffect, useTransition } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Search } from 'lucide-react';
 
 export function SearchInput() {
     const router = useRouter();
@@ -15,19 +14,19 @@ export function SearchInput() {
         setSearchValue(searchParams.get('q') || '');
     }, [searchParams]);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!searchValue.trim()) return;
-        router.push(`/search?q=${encodeURIComponent(searchValue.trim())}`);
-    };
-
     return (
-        <form onSubmit={handleSubmit} className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground"/>
-            <Input
+        <form onSubmit={(e) => {
+            e.preventDefault();
+            if (!searchValue.trim()) return;
+            startTransition(() => {
+                router.push(`/search?q=${encodeURIComponent(searchValue.trim())}`);
+            });
+        }} className="flex items-center w-full bg-[#F1F5F9] rounded-full px-4 py-2 gap-2">
+            <Search size={16} className="text-muted-foreground shrink-0" />
+            <input
                 type="search"
                 placeholder="Buscar productos..."
-                className="pl-9 sm:w-64 w-full"
+                className="bg-transparent text-sm outline-none w-full placeholder:text-muted-foreground font-inter disabled:opacity-50"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 disabled={isPending}

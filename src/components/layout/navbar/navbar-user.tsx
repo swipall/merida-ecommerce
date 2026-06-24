@@ -1,7 +1,6 @@
 'use client';
 
 import { User } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,7 +13,6 @@ import { LoginButton } from "@/components/layout/navbar/login-button";
 import { useAuthUser } from '@/hooks/use-auth-user';
 import { NavbarUserSkeleton } from '@/components/shared/skeletons/navbar-user-skeleton';
 
-
 export function NavbarUser() {
     const { user, isLoading } = useAuthUser();
 
@@ -24,23 +22,27 @@ export function NavbarUser() {
 
     if (!user) {
         return (
-            <Button className='text-primary-foreground bg-primary' variant="ghost" asChild>
-                <LoginButton isLoggedIn={false} />
-            </Button>
+            <Link
+                href="/account/login"
+                className="p-2 text-black hover:text-[#FF637E] transition-colors hidden sm:flex"
+                aria-label="Iniciar sesión"
+            >
+                <User size={20} />
+            </Link>
         );
     }
-
-    const firstName = user.first_name || 'Usuario';
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button className="text-primary-foreground dark:text-white" variant="ghost">
-                    <User className="h-5 w-5 text-primary-foreground" />
-                    Hola, {firstName}
-                </Button>
+                <button
+                    className="p-2 text-black hover:text-[#FF637E] transition-colors hidden sm:flex"
+                    aria-label={`Perfil de ${user.first_name || 'Usuario'}`}
+                >
+                    <User size={20} />
+                </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent align="end" className="font-inter">
                 <DropdownMenuItem asChild>
                     <Link href="/account/profile">Perfil</Link>
                 </DropdownMenuItem>

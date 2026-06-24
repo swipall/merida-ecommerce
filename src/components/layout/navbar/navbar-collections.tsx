@@ -1,11 +1,6 @@
 import { NavbarLink } from '@/components/layout/navbar/navbar-link';
 import { NavbarDropdownItem } from '@/components/layout/navbar/navbar-dropdown-item';
 import { getMenuItemHref } from '@/components/layout/navbar/navbar-menu-helpers';
-import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuList,
-} from '@/components/ui/navigation-menu';
 import { getPosts } from '@/lib/swipall/rest-adapter';
 import { CmsPost } from '@/lib/swipall/types/types';
 import { cacheLife } from 'next/cache';
@@ -25,25 +20,21 @@ export async function NavbarCollections() {
     const redirectUrl = (item: CmsPost) => getMenuItemHref(item);
 
     return (
-        <NavigationMenu>
-            <NavigationMenuList>
-                {itemsWithChildren.map((item) =>
-                    item.children.length > 0 ? (
-                        <NavbarDropdownItem
-                            key={item.slug}
-                            title={item.title}
-                            href={redirectUrl(item)}
-                            items={item.children}
-                        />
-                    ) : (
-                        <NavigationMenuItem key={item.slug}>
-                            <NavbarLink href={redirectUrl(item)}>
-                                {item.title}
-                            </NavbarLink>
-                        </NavigationMenuItem>
-                    )
-                )}
-            </NavigationMenuList>
-        </NavigationMenu>
+        <div className="flex items-center">
+            {itemsWithChildren.map((item) =>
+                item.children.length > 0 ? (
+                    <NavbarDropdownItem
+                        key={item.slug}
+                        title={item.title}
+                        href={redirectUrl(item)}
+                        items={item.children}
+                    />
+                ) : (
+                    <NavbarLink key={item.slug} href={redirectUrl(item)}>
+                        {item.title}
+                    </NavbarLink>
+                )
+            )}
+        </div>
     );
 }
