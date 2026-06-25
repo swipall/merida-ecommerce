@@ -8,17 +8,20 @@ import { PromoBar } from '@/components/layout/navbar/promo-bar';
 import { Suspense } from "react";
 import { SearchInput } from '@/components/layout/search-input';
 import { SearchInputSkeleton } from '@/components/shared/skeletons/search-input-skeleton';
+import { getSiteLogoUrl } from '@/lib/swipall/site-assets';
 
-const LOGO_URL =
+const FALLBACK_LOGO =
     "https://mmcb.b-cdn.net/media/attachments/f/f/e/6/c77a2aed2634f9a90555c2db1507cad8ea06a1c4bf34c2e46ac3aeab0f61/logo-merida.png";
 
-const cartSlot = (
-    <Suspense fallback={<div className="w-8 h-8" />}>
-        <NavbarCart />
-    </Suspense>
-);
+export async function Navbar() {
+    const logoUrl = (await getSiteLogoUrl()) ?? FALLBACK_LOGO;
 
-export function Navbar() {
+    const cartSlot = (
+        <Suspense fallback={<div className="w-8 h-8" />}>
+            <NavbarCart />
+        </Suspense>
+    );
+
     return (
         <header className="sticky top-0 z-50 bg-white border-b border-border shadow-sm">
             {/* Promo bar — contenido dinámico desde slug: barra-de-anuncio */}
@@ -27,7 +30,7 @@ export function Navbar() {
             </Suspense>
 
             {/* Mobile header (< md) */}
-            <NavbarMobileHeader logoUrl={LOGO_URL} cart={cartSlot} />
+            <NavbarMobileHeader logoUrl={logoUrl} cart={cartSlot} />
 
             {/* Desktop header (≥ md) */}
             <div className="hidden md:block max-w-7xl mx-auto px-4 lg:px-8">
@@ -35,7 +38,7 @@ export function Navbar() {
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0">
                         <Image
-                            src={LOGO_URL}
+                            src={logoUrl}
                             alt="Mérida Mayoreo"
                             width={120}
                             height={32}
@@ -44,7 +47,7 @@ export function Navbar() {
                         />
                     </Link>
 
-                    {/* Nav with dropdowns — lg+ */}
+                    {/* Nav con dropdowns — lg+ */}
                     <nav className="hidden lg:flex items-center flex-1 justify-center">
                         <Suspense>
                             <NavbarCollections />

@@ -8,6 +8,7 @@ import {MobileBottomNav} from "@/components/layout/mobile-bottom-nav";
 import {ThemeProvider} from "@/components/providers/theme-provider";
 import {PriceListProvider} from "@/components/providers/price-list-provider";
 import {SITE_NAME, SITE_URL} from "@/lib/metadata";
+import {getSiteFaviconUrl} from "@/lib/swipall/site-assets";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -33,34 +34,41 @@ const inter = Inter({
     display: "swap",
 });
 
-export const metadata: Metadata = {
-    metadataBase: new URL(SITE_URL),
-    title: {
-        default: SITE_NAME,
-        template: `%s | ${SITE_NAME}`,
-    },
-    description:
-        "Shop the best products at Vendure Store. Quality products, competitive prices, and fast delivery.",
-    openGraph: {
-        type: "website",
-        siteName: SITE_NAME,
-        locale: "en_US",
-    },
-    twitter: {
-        card: "summary_large_image",
-    },
-    robots: {
-        index: true,
-        follow: true,
-        googleBot: {
+export async function generateMetadata(): Promise<Metadata> {
+    const faviconUrl = await getSiteFaviconUrl();
+
+    return {
+        metadataBase: new URL(SITE_URL),
+        title: {
+            default: SITE_NAME,
+            template: `%s | ${SITE_NAME}`,
+        },
+        description:
+            "Shop the best products at Vendure Store. Quality products, competitive prices, and fast delivery.",
+        icons: faviconUrl
+            ? { icon: faviconUrl, shortcut: faviconUrl, apple: faviconUrl }
+            : undefined,
+        openGraph: {
+            type: "website",
+            siteName: SITE_NAME,
+            locale: "en_US",
+        },
+        twitter: {
+            card: "summary_large_image",
+        },
+        robots: {
             index: true,
             follow: true,
-            "max-video-preview": -1,
-            "max-image-preview": "large",
-            "max-snippet": -1,
+            googleBot: {
+                index: true,
+                follow: true,
+                "max-video-preview": -1,
+                "max-image-preview": "large",
+                "max-snippet": -1,
+            },
         },
-    },
-};
+    };
+}
 
 export const viewport: Viewport = {
     width: "device-width",

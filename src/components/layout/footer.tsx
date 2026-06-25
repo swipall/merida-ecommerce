@@ -3,6 +3,10 @@ import { CmsPost } from '@/lib/swipall/types/types';
 import { cacheLife } from 'next/cache';
 import Image from "next/image";
 import Link from "next/link";
+import { getSiteLogoUrl } from '@/lib/swipall/site-assets';
+
+const FALLBACK_LOGO =
+    "https://mmcb.b-cdn.net/media/attachments/f/f/e/6/c77a2aed2634f9a90555c2db1507cad8ea06a1c4bf34c2e46ac3aeab0f61/logo-merida.png";
 
 const FOOTER_MENUS = [
     { slug: 'informacion',        title: 'Información' },
@@ -33,6 +37,8 @@ export async function Footer() {
     'use cache';
     cacheLife('days');
 
+    const logoUrl = (await getSiteLogoUrl()) ?? FALLBACK_LOGO;
+
     const menus = await Promise.all(
         FOOTER_MENUS.map(async (menu) => ({
             ...menu,
@@ -49,11 +55,11 @@ export async function Footer() {
                     <div className="flex flex-col gap-4">
                         <Link href="/">
                             <Image
-                                src="https://mmcb.b-cdn.net/media/attachments/f/f/e/6/c77a2aed2634f9a90555c2db1507cad8ea06a1c4bf34c2e46ac3aeab0f61/logo-merida.png"
+                                src={logoUrl}
                                 alt="Mérida Mayoreo"
                                 width={120}
                                 height={40}
-                                className="h-12 w-auto rounded-md"
+                                className="h-12 w-auto object-contain brightness-0 invert"
                             />
                         </Link>
                     </div>

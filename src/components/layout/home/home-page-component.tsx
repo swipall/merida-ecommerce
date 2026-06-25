@@ -24,7 +24,7 @@ export async function HomePageComponent() {
     }
 
     return (
-        <div className="min-h-screen mt-[120px] sm:mt-14">
+        <div className="min-h-screen">
             {blocks.map((post) => (
                 <Suspense key={post.slug} fallback={null}>
                     <HomeSectionRenderer post={post} />
