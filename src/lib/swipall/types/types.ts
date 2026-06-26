@@ -233,6 +233,7 @@ export interface TaxonomyInterface {
     name: string;
     slug: string;
     value: string | null;
+    kind?: string;
     thumbnail?: string;
     icon?: string;
     color?: string;

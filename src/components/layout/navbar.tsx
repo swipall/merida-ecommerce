@@ -8,14 +8,11 @@ import { PromoBar } from '@/components/layout/navbar/promo-bar';
 import { Suspense } from "react";
 import { SearchInput } from '@/components/layout/search-input';
 import { SearchInputSkeleton } from '@/components/shared/skeletons/search-input-skeleton';
-import { getSiteLogoUrl } from '@/lib/swipall/site-assets';
 
-const FALLBACK_LOGO =
+const LOGO_URL =
     "https://mmcb.b-cdn.net/media/attachments/f/f/e/6/c77a2aed2634f9a90555c2db1507cad8ea06a1c4bf34c2e46ac3aeab0f61/logo-merida.png";
 
-export async function Navbar() {
-    const logoUrl = (await getSiteLogoUrl()) ?? FALLBACK_LOGO;
-
+export function Navbar() {
     const cartSlot = (
         <Suspense fallback={<div className="w-8 h-8" />}>
             <NavbarCart />
@@ -30,7 +27,7 @@ export async function Navbar() {
             </Suspense>
 
             {/* Mobile header (< md) */}
-            <NavbarMobileHeader logoUrl={logoUrl} cart={cartSlot} />
+            <NavbarMobileHeader logoUrl={LOGO_URL} cart={cartSlot} />
 
             {/* Desktop header (≥ md) */}
             <div className="hidden md:block max-w-7xl mx-auto px-4 lg:px-8">
@@ -38,7 +35,7 @@ export async function Navbar() {
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0">
                         <Image
-                            src={logoUrl}
+                            src={LOGO_URL}
                             alt="Mérida Mayoreo"
                             width={120}
                             height={32}

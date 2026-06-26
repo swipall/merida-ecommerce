@@ -52,5 +52,5 @@ export async function HomeProductsByCategorySection({ post }: HomeProductsByCate
         return null;
     }
 
-    return <ProductCarousel title={post.title ?? "Productos"} products={products} />;
+    return <ProductCarousel title={post.title ?? "Productos"} excerpt={post.excerpt} products={products} />;
 }

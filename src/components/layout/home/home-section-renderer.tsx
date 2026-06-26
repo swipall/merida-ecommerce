@@ -7,6 +7,7 @@ import { HomeBannerSliderSection } from "./sections/home-banner-slider-section";
 import { HomeCategoriesSection } from "./sections/home-categories-section";
 import { HomeProductsByCategorySection } from "./sections/home-products-by-category-section";
 import { HomeHtmlSection } from "./sections/home-html-section";
+import { HomeCompanyInfoSection } from "./sections/home-company-info-section";
 import { JSX } from "react";
 import { HomeBannerSliderSectionWrapper } from "./sections/home-banner-slider";
 
@@ -20,6 +21,7 @@ const SECTION_RENDERERS: Record<HomeBlockType, (props: { post: CmsPost; items?: 
     "home-categories": HomeCategoriesSection as any,
     "home-products-by-category": HomeProductsByCategorySection as any,
     "home-html": HomeHtmlSection as any,
+    "home-company-info": HomeCompanyInfoSection as any,
 };
 
 

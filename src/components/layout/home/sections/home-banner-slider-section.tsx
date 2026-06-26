@@ -147,6 +147,7 @@ function BannerSliderItemFull({ item }: { item: CmsPost }) {
                     src={item.featured_image}
                     alt={item.title ?? "Banner"}
                     fill
+                    sizes="(min-width: 768px) 50vw, 100vw"
                     className="object-cover h-full"
                     priority
                 />

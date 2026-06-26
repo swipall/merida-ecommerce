@@ -7,10 +7,11 @@ import {useId} from "react";
 
 interface ProductCarouselClientProps {
     title: string;
+    excerpt?: string | null;
     products: InterfaceInventoryItem[];
 }
 
-export function ProductCarousel({title, products}: ProductCarouselClientProps) {
+export function ProductCarousel({title, excerpt, products}: ProductCarouselClientProps) {
     const id = useId();
 
     if(!products){
@@ -20,7 +21,8 @@ export function ProductCarousel({title, products}: ProductCarouselClientProps) {
     return (
         <section className="py-12 md:py-16">
             <div className="container mx-auto px-4">
-                <h2 className="text-3xl md:text-4xl font-bold mb-8">{title}</h2>
+                {excerpt && <p className="font-jost text-[#FF637E] text-[11px] font-bold uppercase tracking-[2px] mb-1">{excerpt}</p>}
+                <h2 className="font-jost text-2xl md:text-3xl font-black uppercase tracking-[2px] mb-8">{title}</h2>
                 <Carousel
                     opts={{
                         align: "start",
@@ -35,7 +37,7 @@ export function ProductCarousel({title, products}: ProductCarouselClientProps) {
                                 <ProductCard product={product}/>
                             </CarouselItem>
                         ))}
-                    </CarouselContent>
+                    </CarouselContent> 
                     <CarouselPrevious className="hidden md:flex"/>
                     <CarouselNext className="hidden md:flex"/>
                 </Carousel>
