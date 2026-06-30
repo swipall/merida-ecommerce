@@ -23,7 +23,7 @@ export function NavbarUser() {
     if (!user) {
         return (
             <Link
-                href="/account/login"
+                href="/sign-in"
                 className="p-2 text-black hover:text-[#FF637E] transition-colors hidden sm:flex"
                 aria-label="Iniciar sesión"
             >
