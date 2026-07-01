@@ -8,10 +8,11 @@ import { useRouter } from 'next/navigation';
 
 interface NavbarMobileHeaderProps {
     logoUrl: string;
+    siteName: string;
     cart: React.ReactNode;
 }
 
-export function NavbarMobileHeader({ logoUrl, cart }: NavbarMobileHeaderProps) {
+export function NavbarMobileHeader({ logoUrl, siteName, cart }: NavbarMobileHeaderProps) {
     const [searchOpen, setSearchOpen] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const router = useRouter();
@@ -30,7 +31,7 @@ export function NavbarMobileHeader({ logoUrl, cart }: NavbarMobileHeaderProps) {
                 <Link href="/" className="flex-shrink-0">
                     <Image
                         src={logoUrl}
-                        alt="Mérida Mayoreo"
+                        alt={siteName}
                         width={100}
                         height={27}
                         className="h-9 w-auto object-contain"

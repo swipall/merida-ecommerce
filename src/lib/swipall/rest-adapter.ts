@@ -20,7 +20,8 @@ import type {
     ShopCartItem,
     TaxonomyInterface,
     UpdateCartDeliveryInfoBody,
-    UpdateCustomerInput
+    UpdateCustomerInput,
+    SiteConfig
 } from './types/types';
 import { OrderDetailInterface, OrderInterface } from './users/user.types';
 
@@ -84,6 +85,15 @@ export async function getGroupVariants(groupId: string): Promise<InterfaceApiLis
 
 export async function getCollection(slug: string): Promise<InterfaceApiDetailResponse<Collection>> {
     return get<InterfaceApiDetailResponse<Collection>>(`/collections/${slug}`);
+}
+
+export async function getSiteConfig(): Promise<SiteConfig | null> {
+    try {
+        const response = await get<SiteConfig>('/api/v1/shop/site');
+        return response ?? null;
+    } catch {
+        return null;
+    }
 }
 
 export async function getPosts(params: any): Promise<InterfaceApiListResponse<CmsPost>> {

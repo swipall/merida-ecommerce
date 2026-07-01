@@ -16,7 +16,7 @@ export function NavbarLink({ href, children, ...rest }: ComponentProps<typeof Li
             href={href}
             prefetch={false}
             className={cn(
-                'relative px-3 py-2 font-jost text-[12px] font-medium uppercase tracking-[1.5px] transition-colors',
+                'relative px-3 py-2 font-jost text-sm font-semibold uppercase tracking-[1.5px] transition-colors',
                 isActive ? 'text-black' : 'text-black/70 hover:text-[#FF637E]'
             )}
             {...rest}

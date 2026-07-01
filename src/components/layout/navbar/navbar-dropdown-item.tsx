@@ -39,7 +39,7 @@ export function NavbarDropdownItem({ title, href, items }: NavbarDropdownItemPro
         >
             <button
                 className={cn(
-                    'flex items-center gap-1 px-3 py-2 font-jost text-[12px] font-medium uppercase tracking-[1.5px] transition-colors',
+                    'flex items-center gap-1 px-3 py-2 font-jost text-sm font-semibold uppercase tracking-[1.5px] transition-colors',
                     open ? 'text-[#FF637E]' : 'text-black/70 hover:text-[#FF637E]'
                 )}
             >

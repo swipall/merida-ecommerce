@@ -276,13 +276,31 @@ Solo imagen, opcionalmente con link (sin botón visible):
 }
 ```
 
-**Campos importantes:**
-- `slug`: Identificamos con el slug la seccion de promociones
-- `body`: HTML puro (sin escapar)
-- `title`: Opcional (puede ser null)
-- Uso: Dividers, banners, texto libre, widgets personalizados
+### 6 Banner para promociones
 
+**Para activarlo en el CMS, crea un post hijo de ecommerce-home con:**
+
+**Categoría:** home-promo-banner
+**Título:** el texto a mostrar
+**Link:** URL de destino
+**Body (JSON opcional):** {"subtitle": "texto pequeño arriba", "buttonText": "Ver oferta"}
+**Ordering:** el número que define su posición en la home
+
+
+``` json
+{
+  "slug": "promocion-primavera-verano",
+  "title": "Promocion primavera verano",
+  "excerpt": null,
+  "body": "{"subtitle": "texto pequeño arriba", "buttonText": "Ver oferta"}",
+  "categories": [
+    { "name": "Home", "slug": "home-block" },
+    { "name": "HTML", "slug": "home-promo-banner" }
+  ]
+}
+```
 ---
+
 
 ## 📐 Orden Recomendado
 

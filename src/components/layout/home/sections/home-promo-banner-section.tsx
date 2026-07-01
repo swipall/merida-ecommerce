@@ -43,7 +43,7 @@ function PromoBannerWithImage({
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-black/0" />
-            <div className="absolute inset-0 flex flex-col items-start justify-center text-white text-left px-4 space-y-3">
+            <div className="absolute inset-0 flex flex-col items-start justify-center text-white text-left px-8 space-y-3">
                 {subtitle && (
                     <p className="text-xs md:text-sm uppercase tracking-[0.2em] text-white/75 font-jost font-semibold">
                         {subtitle}

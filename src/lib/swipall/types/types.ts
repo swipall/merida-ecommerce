@@ -262,6 +262,24 @@ export interface CmsPost {
 }
 
 // ============================================================================
+// Site Config Types
+// ============================================================================
+
+export interface SiteConfig {
+    title: string;
+    slug: string;
+    logo: string | null;
+    favicon: { favicon: string } | string | null;
+    notification_email: string | null;
+    excerpt: string | null;
+    whatsapp: string | null;
+    facebook_link: string | null;
+    twitter_link: string | null;
+    instagram_link: string | null;
+    youtube_link: string | null;
+}
+
+// ============================================================================
 // Banner Slider Types
 // ============================================================================
 

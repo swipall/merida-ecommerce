@@ -55,11 +55,11 @@ export function HomeBannerSliderSection({
                     plugins={
                         autoplay
                             ? [
-                                  Autoplay({
-                                      delay: duration,
-                                      stopOnInteraction: true,
-                                  }),
-                              ]
+                                Autoplay({
+                                    delay: duration,
+                                    stopOnInteraction: true,
+                                }),
+                            ]
                             : []
                     }
                     className="w-full"
@@ -134,7 +134,7 @@ function BannerSliderItemFull({ item }: { item: CmsPost }) {
                     )}
                     {item.link && (
                         <div className="pt-2">
-                            <Button  asChild size="lg" variant="accent">
+                            <Button asChild size="lg" variant="accent">
                                 <Link href={item.link}>{buttonText}</Link>
                             </Button>
                         </div>

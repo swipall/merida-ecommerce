@@ -1,17 +1,32 @@
-import { getPosts } from '@/lib/swipall/rest-adapter';
-import { cacheLife } from 'next/cache';
+import { getSiteConfig } from '@/lib/swipall/rest-adapter';
+import { unstable_cache } from 'next/cache';
+import { SITE_NAME } from '@/lib/metadata';
+import type { SiteConfig } from '@/lib/swipall/types/types';
 
-async function getAssetUrl(slug: string): Promise<string | null> {
-    'use cache';
-    cacheLife('days');
-    const result = await getPosts({ slug });
-    return result?.results?.[0]?.featured_image ?? null;
+const getCachedSiteConfig = unstable_cache(
+    async (): Promise<SiteConfig | null> => getSiteConfig(),
+    ['site-config'],
+    { revalidate: 86400 } // 24 horas
+);
+
+export async function getSiteLogoUrl(): Promise<string | null> {
+    const config = await getCachedSiteConfig();
+    return config?.logo ?? null;
 }
 
-export function getSiteLogoUrl(): Promise<string | null> {
-    return getAssetUrl('logo-web');
+export async function getSiteFaviconUrl(): Promise<string | null> {
+    const config = await getCachedSiteConfig();
+    if (!config?.favicon) return null;
+    if (typeof config.favicon === 'object') return config.favicon.favicon ?? null;
+    return config.favicon;
 }
 
-export function getSiteFaviconUrl(): Promise<string | null> {
-    return getAssetUrl('favicon-web');
+export async function getSiteName(): Promise<string> {
+    const config = await getCachedSiteConfig();
+    return config?.title || SITE_NAME;
+}
+
+export async function getSiteDescription(): Promise<string | null> {
+    const config = await getCachedSiteConfig();
+    return config?.excerpt ?? null;
 }

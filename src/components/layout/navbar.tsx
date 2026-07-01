@@ -8,11 +8,18 @@ import { PromoBar } from '@/components/layout/navbar/promo-bar';
 import { Suspense } from "react";
 import { SearchInput } from '@/components/layout/search-input';
 import { SearchInputSkeleton } from '@/components/shared/skeletons/search-input-skeleton';
+import { getSiteLogoUrl, getSiteName } from '@/lib/swipall/site-assets';
 
-const LOGO_URL =
-    "https://mmcb.b-cdn.net/media/attachments/f/f/e/6/c77a2aed2634f9a90555c2db1507cad8ea06a1c4bf34c2e46ac3aeab0f61/logo-merida.png";
+const FALLBACK_LOGO =
+    "https://mmcb.b-cdn.net/media/attachments/f/e/1/a/7db82f8034376f8cfe56fc1a9c4df7e439e587efbbf1b8a462560b93d778/logo-q.png";
 
-export function Navbar() {
+export async function Navbar() {
+    const [logoUrl, siteName] = await Promise.all([
+        getSiteLogoUrl(),
+        getSiteName(),
+    ]);
+    const logo = logoUrl ?? FALLBACK_LOGO;
+
     const cartSlot = (
         <Suspense fallback={<div className="w-8 h-8" />}>
             <NavbarCart />
@@ -27,16 +34,16 @@ export function Navbar() {
             </Suspense>
 
             {/* Mobile header (< md) */}
-            <NavbarMobileHeader logoUrl={LOGO_URL} cart={cartSlot} />
+            <NavbarMobileHeader logoUrl={logo} siteName={siteName} cart={cartSlot} />
 
             {/* Desktop header (≥ md) */}
-            <div className="hidden md:block max-w-7xl mx-auto px-4 lg:px-8">
+            <div className="hidden md:block container mx-auto px-4 lg:px-8">
                 <div className="flex items-center gap-4 h-16">
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0">
                         <Image
-                            src={LOGO_URL}
-                            alt="Mérida Mayoreo"
+                            src={logo}
+                            alt={siteName}
                             width={120}
                             height={32}
                             className="h-10 w-auto object-contain"
