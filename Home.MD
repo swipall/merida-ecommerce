@@ -84,6 +84,7 @@ La página de inicio está compuesta por bloques modulares (posts CMS) que se pu
     { "name": "Home", "slug": "home-block" },
     { "name": "Categorías", "slug": "home-categories" }
   ],
+  "link": "/search",
   "ordering": 2,
   "parent": {
     "slug": "ecommerce-home",
@@ -96,6 +97,7 @@ La página de inicio está compuesta por bloques modulares (posts CMS) que se pu
 - `body`: JSON con array `items`:
   - `slug`: Slug de la categoría (navegación)
   - `image`: Imagen de la categoría (recomendado: 300x300px)
+- `link`: URL del botón "Ver todas" (opcional). Si no se define, cae a `/search`.
 
 ---
 

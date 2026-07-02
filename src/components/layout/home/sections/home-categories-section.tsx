@@ -9,6 +9,7 @@ interface HomeCategoriesBody {
         slug: string;
         image?: string;
         title?: string;
+        link: string;
     }>;
     viewAllHref?: string;
     eyebrow?: string;
@@ -22,7 +23,7 @@ export function HomeCategoriesSection({ post }: HomeCategoriesSectionProps) {
     const body = parsePostBody<HomeCategoriesBody>(post.body);
     const items = body?.items ?? [];
     const eyebrow = body?.eyebrow ?? post.excerpt ?? "EXPLORAR";
-    const viewAllHref = body?.viewAllHref ?? "/search";
+    const viewAllHref = post.link ?? body?.viewAllHref ?? "/search";
 
     if (items.length === 0) return null;
 

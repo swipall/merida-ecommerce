@@ -68,7 +68,7 @@ function PromoBannerWithImage({
 
     if (post.link) {
         return (
-            <section>
+            <section className="container px-4 mx-auto">
                 <Link href={post.link} className="block">
                     {content}
                 </Link>
