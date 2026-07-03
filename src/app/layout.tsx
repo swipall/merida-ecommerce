@@ -1,6 +1,7 @@
 import type {Metadata, Viewport} from "next";
 import {Geist, Geist_Mono, Jost, Inter} from "next/font/google";
 import "./globals.css";
+import {Suspense} from "react";
 import {Toaster} from "@/components/ui/sonner";
 import {Navbar} from "@/components/layout/navbar";
 import {Footer} from "@/components/layout/footer";
@@ -94,7 +95,9 @@ export default function RootLayout({children}: LayoutProps<'/'>) {
                         <Navbar />
                         {children}
                         <Footer />
-                        <MobileBottomNav />
+                        <Suspense fallback={null}>
+                            <MobileBottomNav />
+                        </Suspense>
                         <Toaster />
                     </PriceListProvider>
                 </ThemeProvider>

@@ -10,7 +10,7 @@ export async function SearchTerm({searchParams}: SearchTermProps) {
 
     return (
         <div className="mb-6">
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-xl sm:text-2xl font-bold">
                 {searchTerm ? `Búsqueda de "${searchTerm}"` : 'Buscar'}
             </h1>
         </div>

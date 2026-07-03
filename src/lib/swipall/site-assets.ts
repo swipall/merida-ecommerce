@@ -1,13 +1,13 @@
 import { getSiteConfig } from '@/lib/swipall/rest-adapter';
-import { unstable_cache } from 'next/cache';
+import { cacheLife } from 'next/cache';
 import { SITE_NAME } from '@/lib/metadata';
 import type { SiteConfig } from '@/lib/swipall/types/types';
 
-const getCachedSiteConfig = unstable_cache(
-    async (): Promise<SiteConfig | null> => getSiteConfig(),
-    ['site-config'],
-    { revalidate: 86400 } // 24 horas
-);
+async function getCachedSiteConfig(): Promise<SiteConfig | null> {
+    'use cache';
+    cacheLife('days');
+    return getSiteConfig();
+}
 
 export async function getSiteLogoUrl(): Promise<string | null> {
     const config = await getCachedSiteConfig();

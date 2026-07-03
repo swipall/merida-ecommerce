@@ -4,7 +4,7 @@ import { addToCart, getGroupVariant, testApiMiddleWare } from '@/app/product/[id
 import { Price } from '@/components/commerce/price';
 import { Button } from '@/components/ui/button';
 import { InterfaceInventoryItem, Material, ProductKind, ProductVariant, VariantOption } from '@/lib/swipall/types/types';
-import { CheckCircle2, ShoppingCart } from 'lucide-react';
+import { CheckCircle2, Minus, Plus, ShoppingCart } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -34,6 +34,7 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
     const { user } = useAuthUser();
     const [isPending, startTransition] = useTransition();
     const [isAdded, setIsAdded] = useState(false);
+    const [quantity, setQuantity] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
     const [variants, setVariants] = useState<VariantOption[]>([]);
     const [selectedSizeId, setSelectedSizeId] = useState<string>('');
@@ -147,6 +148,10 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
         fetchVariant();
     }, [selectedColorId, selectedSizeId, product.id]);
 
+    useEffect(() => {
+        setQuantity(1);
+    }, [selectedVariant?.id, product.id]);
+
     const handleAttributeChange = useCallback((kind: string, valueId: string) => {
         if (kind === 'size') {
             setSelectedSizeId(valueId);
@@ -202,7 +207,7 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
 
         startTransition(async () => {
             const addToCartParams = {
-                quantity: 1,
+                quantity,
                 extra_materials: product.kind === ProductKind.Compound
                     ? selectedMaterials.map(mat => ({ material_id: mat.id, name: mat.name }))
                     : [],
@@ -218,6 +223,7 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                     description: `${product.name} ha sido agregado a tu carrito`,
                 });
 
+                setQuantity(1);
                 setTimeout(() => setIsAdded(false), AUTO_RESET_DELAY);
             } else {
                 toast.error('Error', {
@@ -225,7 +231,11 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                 });
             }
         });
-    }, [product, selectedVariant, selectedMaterials, user, router, itemPrice]);
+    }, [product, selectedVariant, selectedMaterials, user, router, itemPrice, quantity]);
+
+    const variantNotSelected = useMemo(() =>
+        product.kind === ProductKind.Group && !selectedVariant && variants.length > 0
+        , [product.kind, selectedVariant, variants.length]);
 
     const isInStock = useMemo(() =>
         product.kind === ProductKind.Group
@@ -244,6 +254,12 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
             ? !!selectedVariant && isInStock
             : isInStock
         , [product.kind, selectedVariant, isInStock]);
+
+    const maxQuantity = useMemo(() => Math.max(availableQuantity, 1), [availableQuantity]);
+
+    useEffect(() => {
+        setQuantity(q => Math.min(q, maxQuantity));
+    }, [maxQuantity]);
 
     const buttonText = useMemo(() => {
         if (isAdded) return 'Se agregó al carrito';
@@ -282,7 +298,11 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                     )}
                 </div>
                 <div className="text-sm">
-                    {isInStock ? (
+                    {variantNotSelected ? (
+                        <span className="bg-muted/50 text-muted-foreground text-sm px-2 py-1 rounded-full">
+                            Selecciona una variante
+                        </span>
+                    ) : isInStock ? (
                         <span className="bg-emerald-200 text-emerald-900 font-bold px-2 py-1 rounded-full">
                             {availableQuantity} en existencia
                         </span>
@@ -310,12 +330,44 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                 />
             )}
 
-
+            {canAddToCart && (
+                <div className="flex items-center justify-between gap-4">
+                    <div className="flex bg-card items-center gap-1 rounded-full border">
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-9 w-9 rounded-full"
+                            onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                            disabled={quantity <= 1}
+                        >
+                            <Minus className="h-4 w-4" />
+                        </Button>
+                        <span className="w-8 text-center font-semibold">{quantity}</span>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="h-9 w-9 rounded-full"
+                            onClick={() => setQuantity(q => Math.min(maxQuantity, q + 1))}
+                            disabled={quantity >= maxQuantity}
+                        >
+                            <Plus className="h-4 w-4" />
+                        </Button>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-sm text-muted-foreground">Total del pedido</p>
+                        <p className="text-lg font-bold">
+                            <Price value={itemPrice * quantity} />
+                        </p>
+                    </div>
+                </div>
+            )}
 
             <div className="pt-4">
                 <Button
                     size="lg"
-                    className="w-full text-lg font-bold"
+                    className="w-full text-md font-semibold"
                     disabled={!canAddToCart || isPending}
                     onClick={handleAddToCart}
                 >
@@ -332,9 +384,10 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                     )}
                 </Button>
             </div>
-            <div className="prose prose-sm max-w-none">
+            
+            <div className="prose prose-sm max-w-none mt-10 pb-16">
                 <div className='text-sm text-primary uppercase my-2 font-semibold'>Descripción</div>
-                <div dangerouslySetInnerHTML={{ __html: product.description || '' }} />
+                <div dangerouslySetInnerHTML={{ __html: product.description || '<div class="text-muted-foreground">Sin descripción</div>' }} />
             </div>
         </div>
     );
