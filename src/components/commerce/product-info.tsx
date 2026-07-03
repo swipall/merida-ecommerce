@@ -261,6 +261,19 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
         setQuantity(q => Math.min(q, maxQuantity));
     }, [maxQuantity]);
 
+    const [quantityInput, setQuantityInput] = useState('1');
+
+    useEffect(() => {
+        setQuantityInput(String(quantity));
+    }, [quantity]);
+
+    const commitQuantityInput = useCallback((raw: string) => {
+        const parsed = parseInt(raw, 10);
+        const next = Number.isNaN(parsed) ? quantity : Math.min(Math.max(parsed, 1), maxQuantity);
+        setQuantity(next);
+        setQuantityInput(String(next));
+    }, [quantity, maxQuantity]);
+
     const buttonText = useMemo(() => {
         if (isAdded) return 'Se agregó al carrito';
         if (isPending) return 'Agregando...';
@@ -343,7 +356,26 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                         >
                             <Minus className="h-4 w-4" />
                         </Button>
-                        <span className="w-8 text-center font-semibold">{quantity}</span>
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            aria-label="Cantidad"
+                            value={quantityInput}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                if (val === '' || /^[0-9]+$/.test(val)) {
+                                    setQuantityInput(val);
+                                }
+                            }}
+                            onBlur={(e) => commitQuantityInput(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.currentTarget.blur();
+                                }
+                            }}
+                            className="w-10 bg-transparent text-center font-semibold outline-none"
+                        />
                         <Button
                             type="button"
                             variant="ghost"
