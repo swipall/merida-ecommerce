@@ -15,7 +15,7 @@ export function MobileBottomNav() {
     const pathname = usePathname();
 
     return (
-        <nav className="fixed bottom-0 inset-x-0 bg-white border-t border-border z-50 md:hidden safe-area-pb">
+        <nav className="fixed bottom-0 inset-x-0 bg-white border-t border-border z-50 lg:hidden safe-area-pb">
             <div className="flex">
                 {TABS.map(({ id, label, icon: Icon, href }) => {
                     const isActive =

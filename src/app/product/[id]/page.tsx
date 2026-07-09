@@ -143,7 +143,7 @@ async function ProductDetailContent({ params, searchParams }: PageProps<'/produc
 
     return (
         <>
-            <div className="container mx-auto px-4 py-2 sm:mt-16 bg-card">
+            <div className="container mx-auto px-4 py-2 pb-12 sm:mt-16 bg-card sm:bg-transparent">
                 <Breadcrumb className="mb-2 text-muted-foreground">
                     <BreadcrumbList>
                         <BreadcrumbItem>
@@ -188,32 +188,32 @@ async function ProductDetailContent({ params, searchParams }: PageProps<'/produc
             </div>
 
             {/* Store FAQ Section */}
-            <section className="py-16 bg-muted/30 hidden">
+            <section className="py-16 bg-muted/30">
                 <div className="container mx-auto px-4 max-w-3xl">
                     <h2 className="text-2xl font-bold text-center mb-8">Preguntas Frecuentes</h2>
                     <Accordion type="single" collapsible className="w-full">
-                        <AccordionItem value="shipping">
-                            <AccordionTrigger>¿Cuáles son sus opciones de envío?</AccordionTrigger>
-                            <AccordionContent>
-                                Ofrecemos envío estándar (5-7 días hábiles), envío exprés (2-3 días hábiles) y entrega al día siguiente para áreas selectas. El envío estándar es gratuito en pedidos superiores a $50.
+                        <AccordionItem className='bg-card px-4 rounded-xl mb-2' value="shipping">
+                            <AccordionTrigger>¿Cuáles son las opciones de envío?</AccordionTrigger>
+                            <AccordionContent className='text-muted-foreground'>
+                                Ofrecemos envío estándar (5-7 días hábiles) a un costo de $235 pesos.
                             </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="returns">
+                        <AccordionItem className='bg-card px-4 rounded-xl mb-2' value="returns">
                             <AccordionTrigger>¿Cuál es su política de devoluciones?</AccordionTrigger>
-                            <AccordionContent>
+                            <AccordionContent className='text-muted-foreground'>
                                 Aceptamos devoluciones dentro de los 30 días posteriores a la compra. Los artículos deben estar sin usar y en su embalaje original. Simplemente contacte a nuestro equipo de soporte para iniciar una devolución y recibir una etiqueta de envío prepagada.
                             </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="tracking">
+                        <AccordionItem className='bg-card px-4 rounded-xl mb-2' value="tracking">
                             <AccordionTrigger>¿Cómo puedo rastrear mi pedido?</AccordionTrigger>
-                            <AccordionContent>
+                            <AccordionContent className='text-muted-foreground'>
                                 Una vez que su pedido sea enviado, recibirá un correo electrónico con un número de seguimiento. También puede ver el estado de su pedido en cualquier momento iniciando sesión en su cuenta y visitando la sección de historial de pedidos.
                             </AccordionContent>
                         </AccordionItem>
-                        <AccordionItem value="international">
+                        <AccordionItem className='bg-card px-4 rounded-xl mb-2' value="international">
                             <AccordionTrigger>¿Ofrecen envíos internacionales?</AccordionTrigger>
-                            <AccordionContent>
-                                ¡Sí! Enviamos a más de 50 países en todo el mundo. Las tarifas y los tiempos de entrega internacionales varían según la ubicación. Puede ver el costo exacto en la caja antes de completar su compra.
+                            <AccordionContent className='text-muted-foreground'>
+                                ¡Sí! Sólo ofrecemos envíos a USA, las tarifas y los tiempos de entrega varían segun la ubicación.
                             </AccordionContent>
                         </AccordionItem>
                     </Accordion>

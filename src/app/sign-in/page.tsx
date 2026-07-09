@@ -42,7 +42,7 @@ async function SignInContent({searchParams}: { searchParams: Promise<Record<stri
 
 export default async function SignInPage({searchParams}: PageProps<'/sign-in'>) {
     return (
-        <div className="flex min-h-screen items-center justify-center px-4">
+        <div className="flex min-h-screen pt-12 md:pt-0 sm:items-center justify-center px-4">
             <div className="w-full max-w-md space-y-6">
                 <div className="space-y-2 text-center">
                     <h1 className="text-3xl font-bold">Iniciar Sesión</h1>

@@ -32,7 +32,7 @@ export function CategoriesCarousel({ items }: { items: CategoryItem[] }) {
             <button
                 onClick={() => scroll('left')}
                 aria-label="Anterior"
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-10 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center hover:bg-[#FF637E] transition-colors shadow-md opacity-0 group-hover/carousel:opacity-100 focus:opacity-100"
+                className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center hover:bg-[#FF637E] transition-colors shadow-md opacity-0 group-hover/carousel:opacity-100 focus:opacity-100"
             >
                 <ChevronLeft size={16} />
             </button>
@@ -84,7 +84,7 @@ export function CategoriesCarousel({ items }: { items: CategoryItem[] }) {
             <button
                 onClick={() => scroll('right')}
                 aria-label="Siguiente"
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-10 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center hover:bg-[#FF637E] transition-colors shadow-md opacity-0 group-hover/carousel:opacity-100 focus:opacity-100"
+                className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center hover:bg-[#FF637E] transition-colors shadow-md opacity-0 group-hover/carousel:opacity-100 focus:opacity-100"
             >
                 <ChevronRight size={16} />
             </button>

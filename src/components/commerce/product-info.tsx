@@ -4,7 +4,7 @@ import { addToCart, getGroupVariant, testApiMiddleWare } from '@/app/product/[id
 import { Price } from '@/components/commerce/price';
 import { Button } from '@/components/ui/button';
 import { InterfaceInventoryItem, Material, ProductKind, ProductVariant, VariantOption } from '@/lib/swipall/types/types';
-import { CheckCircle2, Minus, Plus, ShoppingCart } from 'lucide-react';
+import { CalendarSync, CheckCircle2, LockKeyhole, Minus, Plus, ShoppingCart, TruckElectric } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, useTransition } from 'react';
 import { toast } from 'sonner';
@@ -421,7 +421,21 @@ export function ProductInfo({ product, searchParams }: ProductInfoProps) {
                     )}
                 </Button>
             </div>
-            
+            <div className='grid grid-cols-3 gap-2'>
+                <div className="flex flex-col items-center gap-1.5 border rounded-xl py-4">
+                    <TruckElectric className='text-muted-foreground' />
+                    <span className="text-[10px] text-center text-black font-inter">Envío a México</span>
+                </div>
+                <div className="flex flex-col items-center gap-1.5 border rounded-xl py-4">
+                    <CalendarSync className='text-muted-foreground' />
+                    <span className="text-[10px] text-center text-black font-inter">30 días devolución</span>
+                </div>
+                <div className="flex flex-col items-center gap-1.5 font-inter border rounded-xl py-4">
+                    <LockKeyhole className='text-muted-foreground' />
+                    <span className="text-[10px] text-center text-black font-inter">Compra segura</span>
+                </div>
+            </div>
+
             <div className="prose prose-sm max-w-none mt-10 pb-16">
                 <div className='text-sm text-primary uppercase my-2 font-semibold'>Descripción</div>
                 <div dangerouslySetInnerHTML={{ __html: product.description || '<div class="text-muted-foreground">Sin descripción</div>' }} />

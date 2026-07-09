@@ -88,7 +88,7 @@ export default function RootLayout({children}: LayoutProps<'/'>) {
     return (
         <html lang="en" suppressHydrationWarning>
             <body
-                className={`${geistSans.variable} ${geistMono.variable} ${jost.variable} ${inter.variable} antialiased flex flex-col min-h-screen pb-16 md:pb-0`}
+                className={`${geistSans.variable} ${geistMono.variable} ${jost.variable} ${inter.variable} antialiased flex flex-col min-h-screen pb-16 lg:pb-0`}
             >
                 <ThemeProvider>
                     <PriceListProvider>

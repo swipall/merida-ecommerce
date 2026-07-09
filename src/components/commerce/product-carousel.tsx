@@ -38,8 +38,8 @@ export function ProductCarousel({title, excerpt, products}: ProductCarouselClien
                             </CarouselItem>
                         ))}
                     </CarouselContent> 
-                    <CarouselPrevious className="hidden md:flex"/>
-                    <CarouselNext className="hidden md:flex"/>
+                    <CarouselPrevious className="hidden md:flex left-2"/>
+                    <CarouselNext className="hidden md:flex right-2"/>
                 </Carousel>
             </div>
         </section>
