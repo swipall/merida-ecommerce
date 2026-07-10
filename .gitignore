@@ -35,6 +35,9 @@ bun-debug.log*
 # vercel
 .vercel
 
+# local-only CMS content drafts (not part of the app, never committed)
+/cms/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
