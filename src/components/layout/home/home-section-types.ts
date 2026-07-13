@@ -10,6 +10,7 @@ export const HOME_BLOCK_TYPES = {
     ProductsByCategory: "home-products-by-category",
     Html: "home-html",
     CompanyInfo: "home-company-info",
+    TikTok: "tik-tok-section",
 } as const;
 
 export type HomeBlockType = (typeof HOME_BLOCK_TYPES)[keyof typeof HOME_BLOCK_TYPES];
@@ -22,6 +23,7 @@ const HOME_TYPE_ORDER: HomeBlockType[] = [
     HOME_BLOCK_TYPES.ProductsByCategory,
     HOME_BLOCK_TYPES.Html,
     HOME_BLOCK_TYPES.CompanyInfo,
+    HOME_BLOCK_TYPES.TikTok,
 ];
 
 export function getHomeBlockType(post: CmsPost): HomeBlockType | null {

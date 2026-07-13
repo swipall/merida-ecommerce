@@ -9,6 +9,7 @@ import { HomeHtmlSection } from "./sections/home-html-section";
 import { HomeCompanyInfoSection } from "./sections/home-company-info-section";
 import { JSX } from "react";
 import { HomeBannerSliderSectionWrapper } from "./sections/home-banner-slider";
+import { HomeTikTokSliderSectionWrapper } from "./sections/home-tiktok-slider";
 
 interface HomeSectionRendererProps {
     post: CmsPost;
@@ -22,6 +23,7 @@ const SECTION_RENDERERS: Record<HomeBlockType, (props: { post: CmsPost; items?: 
     "home-products-by-category": HomeProductsByCategorySection as any,
     "home-html": HomeHtmlSection as any,
     "home-company-info": HomeCompanyInfoSection as any,
+    "tik-tok-section": HomeTikTokSliderSectionWrapper,
 };
 
 
