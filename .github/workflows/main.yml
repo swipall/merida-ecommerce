@@ -56,7 +56,7 @@ jobs:
         uses: 'google-github-actions/ssh-compute@v1'
         with:
           instance_name: 'swip-merida'
-          zone: 'us-central1-f'
+          zone: 'us-central1-c'
           user: 'dante'
           ssh_private_key: '${{ secrets.PRIVATE_KEY }}'
           command: >
