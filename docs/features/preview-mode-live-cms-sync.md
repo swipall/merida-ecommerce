@@ -233,7 +233,7 @@ The CMS spec (§5.4 of the mirror doc) explicitly requires visible, layout-stabl
 
 ```env
 # .env.local / deployment env
-CMS_EDITOR_ORIGIN=https://cms.swipall.io      # exact origin the CMS editor is served from; no wildcard, no trailing path
+CMS_EDITOR_ORIGIN=https://cms.swipall.io,http://localhost:4200   # comma-separated allowlist of origins the CMS editor is served from; no wildcard, no trailing path per entry
 PREVIEW_ACCESS_SECRET=<long random static value, shared with the CMS side — see §4.4>
 ```
 
@@ -268,7 +268,7 @@ Both are read server-side only (`page.tsx` for the guard/cookie exchange, `middl
 
 ## 9. Resolved decisions (formerly open questions)
 
-1. **`CMS_EDITOR_ORIGIN` is a single origin, not an allowlist** — `https://cms.swipall.io`. No staging/prod split is required by this spec; if that changes later, this becomes a comma-separated allowlist and the validation in §2.3/§4.3 needs to check membership instead of equality. This is independent of `PREVIEW_ACCESS_SECRET` (§4.4) — the secret gates *access to the route at all*, while `CMS_EDITOR_ORIGIN` gates *which origin the postMessage channel trusts* once inside it. Both checks are required; neither substitutes for the other.
+1. **`CMS_EDITOR_ORIGIN` is a comma-separated allowlist, not a single origin** — e.g. `https://cms.swipall.io,http://localhost:4200`, to support testing against a local `swip-cms-front` dev server alongside production. `page.tsx` parses it into a `string[]`; the client component validates inbound `event.origin` by membership (`allowedOrigins.includes(event.origin)`) instead of equality, and targets outbound `postMessage` calls at whichever origin last sent a valid message (falling back to the first allowlist entry before any message has been received). This is independent of `PREVIEW_ACCESS_SECRET` (§4.4) — the secret gates *access to the route at all*, while `CMS_EDITOR_ORIGIN` gates *which origins the postMessage channel trusts* once inside it. Both checks are required; neither substitutes for the other.
 2. **`HOME_TYPE_ORDER`** (`home-section-types.ts:17-25`) stays the single source of truth for block-type priority — `swip-cms-front`'s `BLOCK_TYPE_PRIORITY` must mirror this list exactly; any future addition of a block type here must be communicated to the CMS team so both lists stay in sync (this is already a known coupling flagged in the CMS's own spec 011 §4.7).
 3. **`PREVIEW_ACCESS_SECRET` injection on the CMS side** is out of scope for this repo — it is provided to `merida-ecommerce` as a deployment-time env var (§6) and is assumed to already be wired into however `swip-cms-front`'s host shell builds the iframe `src`; no further coordination is required before implementing this repo's side of the contract.
 

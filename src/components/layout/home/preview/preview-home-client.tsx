@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
 import { adaptSerializedBlocks, type AdaptedBlock, type SerializedBlockNode } from "./serialized-block-adapter";
 import { renderPreviewBlock } from "./render-preview-block";
 import { HomeHeroSkeleton } from "@/components/shared/skeletons/home-hero-skeleton";
@@ -51,17 +51,19 @@ function skeletonForType(type: string) {
 }
 
 interface PreviewHomeClientProps {
-    allowedOrigin: string;
+    allowedOrigins: string[];
 }
 
-export function PreviewHomeClient({ allowedOrigin }: PreviewHomeClientProps) {
+export function PreviewHomeClient({ allowedOrigins }: PreviewHomeClientProps) {
     const [blocks, setBlocks] = useState<AdaptedBlock[]>([]);
     const readySentRef = useRef(false);
+    const activeOriginRef = useRef<string>(allowedOrigins[0]);
 
     useEffect(() => {
         function handleMessage(event: MessageEvent) {
-            if (event.origin !== allowedOrigin) return;
+            if (!allowedOrigins.includes(event.origin)) return;
             if (!isPreviewSyncMessage(event.data)) return;
+            activeOriginRef.current = event.origin;
             setBlocks(adaptSerializedBlocks(event.data.payload.blocks));
         }
 
@@ -69,11 +71,14 @@ export function PreviewHomeClient({ allowedOrigin }: PreviewHomeClientProps) {
 
         if (!readySentRef.current) {
             readySentRef.current = true;
-            window.parent.postMessage({ type: "swipall-cms:ready" }, allowedOrigin);
+            for (const origin of allowedOrigins) {
+                window.parent.postMessage({ type: "swipall-cms:ready" }, origin);
+            }
         }
 
         return () => window.removeEventListener("message", handleMessage);
-    }, [allowedOrigin]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (blocks.length === 0) {
         return null;
@@ -82,13 +87,19 @@ export function PreviewHomeClient({ allowedOrigin }: PreviewHomeClientProps) {
     return (
         <div className="min-h-screen">
             {blocks.map((block) => (
-                <BlockBoundary key={block.node.id} block={block} allowedOrigin={allowedOrigin} />
+                <BlockBoundary key={block.node.id} block={block} activeOriginRef={activeOriginRef} />
             ))}
         </div>
     );
 }
 
-function BlockBoundary({ block, allowedOrigin }: { block: AdaptedBlock; allowedOrigin: string }) {
+function BlockBoundary({
+    block,
+    activeOriginRef,
+}: {
+    block: AdaptedBlock;
+    activeOriginRef: RefObject<string>;
+}) {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const lastReportedRef = useRef<{ status: BlockStatus; top: number; height: number } | null>(null);
     const [content, setContent] = useState<ReactNode>(null);
@@ -112,7 +123,7 @@ function BlockBoundary({ block, allowedOrigin }: { block: AdaptedBlock; allowedO
                 type: "swipall-cms:block-rendered",
                 payload: { blockId: block.node.id, status: nextStatus, boundingRect },
             },
-            allowedOrigin,
+            activeOriginRef.current,
         );
     };
 

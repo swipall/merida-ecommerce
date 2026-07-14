@@ -31,9 +31,12 @@ async function PreviewHomeGuard({
     searchParams: Promise<{ pk?: string }>;
 }) {
     const secret = process.env.PREVIEW_ACCESS_SECRET;
-    const allowedOrigin = process.env.CMS_EDITOR_ORIGIN;
+    const allowedOrigins = (process.env.CMS_EDITOR_ORIGIN ?? "")
+        .split(",")
+        .map((origin) => origin.trim())
+        .filter(Boolean);
 
-    if (!secret || !allowedOrigin) {
+    if (!secret || allowedOrigins.length === 0) {
         notFound();
     }
 
@@ -57,5 +60,5 @@ async function PreviewHomeGuard({
         });
     }
 
-    return <PreviewHomeClient allowedOrigin={allowedOrigin} />;
+    return <PreviewHomeClient allowedOrigins={allowedOrigins} />;
 }
