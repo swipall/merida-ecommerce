@@ -1,4 +1,4 @@
-# swip-koi-ecommerce — Purpose
+# Merida mayoreo — Purpose
 
 > This storefront is the **customer-facing purchase interface** of the Swipall commerce platform. Its job is to translate the Swipall REST API into a fast, reliable shopping experience — from product discovery to confirmed payment — without requiring the customer to leave a single flow.
 
@@ -122,4 +122,4 @@ When a customer's price list changes (detected on tab focus), `usePriceListRepri
 | Swipall REST API | All product, cart, order, and customer data |
 | MercadoPago | Online payment processing |
 | CDN (`mmcb.b-cdn.net`, `mmcbv4.b-cdn.net`) | Product image delivery |
-| Next.js ISR (`/api/revalidate`) | On-demand cache invalidation triggered by the backend |
+| Next.js `'use cache'` | Time-based cache expiry (`cacheLife`), no on-demand revalidation endpoint |

@@ -80,6 +80,7 @@ export default async function OrderDetailPage(props: PageProps<'/account/orders/
                                                     src={item.item.featured_image}
                                                     alt={item.item.name}
                                                     fill
+                                                    sizes="80px"
                                                     className="object-cover"
                                                 />
                                             )}

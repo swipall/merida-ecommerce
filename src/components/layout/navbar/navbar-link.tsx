@@ -1,28 +1,30 @@
 'use client';
 
-import {useSelectedLayoutSegment} from 'next/navigation';
-import {ComponentProps} from 'react';
+import { useSelectedLayoutSegment } from 'next/navigation';
+import { ComponentProps } from 'react';
 import Link from 'next/link';
-import {
-    NavigationMenuLink,
-    navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
-import {cn} from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
-export function NavbarLink({href, ...rest}: ComponentProps<typeof Link>) {
+export function NavbarLink({ href, children, ...rest }: ComponentProps<typeof Link>) {
     const selectedLayoutSegment = useSelectedLayoutSegment();
     const pathname = selectedLayoutSegment ? `/${selectedLayoutSegment}` : '/';
     const isActive = pathname === href;
 
     return (
-        <NavigationMenuLink asChild active={isActive}>
-            <Link
-                aria-current={isActive ? 'page' : undefined}
-                className={cn(navigationMenuTriggerStyle())}
-                href={href}
-                prefetch={false}
-                {...rest}
-            />
-        </NavigationMenuLink>
+        <Link
+            aria-current={isActive ? 'page' : undefined}
+            href={href}
+            prefetch={false}
+            className={cn(
+                'relative px-2 py-2 font-jost text-xs font-semibold uppercase tracking-[1.5px] transition-colors',
+                isActive ? 'text-black' : 'text-black/70 hover:text-[#FF637E]'
+            )}
+            {...rest}
+        >
+            {children}
+            {isActive && (
+                <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#FF637E] rounded-full" />
+            )}
+        </Link>
     );
 }

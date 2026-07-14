@@ -1,14 +1,13 @@
 import { cacheLife, cacheTag } from 'next/cache';
-import { getActiveChannel, getAvailableCountries, getCatalogs as getCatalogsREST } from './rest-adapter';
-import { CatalogInterface, InterfaceApiListResponse } from './types/types';
+import { getActiveChannel, getAvailableCountries, getCatalogs as getCatalogsREST, getTaxonomies } from './rest-adapter';
+import { CatalogInterface, InterfaceApiListResponse, TaxonomyInterface } from './types/types';
 
 /**
  * Get the active channel with caching enabled.
- * Channel configuration rarely changes, so we cache it for 1 hour.
  */
 export async function getActiveChannelCached() {
     'use cache';
-    cacheLife('hours');
+    cacheLife('minutes');
 
     try {
         const result = await getActiveChannel();
@@ -39,11 +38,10 @@ export async function getAvailableCountriesCached() {
 
 /**
  * Get top-level collections with caching enabled.
- * Collections rarely change, so we cache them for 1 day.
  */
 export async function getCatalogs(params: Record<string, any> = {}): Promise<InterfaceApiListResponse<CatalogInterface>> {
     'use cache';
-    cacheLife('days');
+    cacheLife('minutes');
     cacheTag('collections');
 
     try {
@@ -58,4 +56,28 @@ export async function getCatalogs(params: Record<string, any> = {}): Promise<Int
             previous: null,
         };
     }
+}
+
+/**
+ * Resolve a visible taxonomy by its slug, with caching enabled.
+ */
+export async function getTaxonomyBySlugCached(slug: string): Promise<TaxonomyInterface | null> {
+    'use cache';
+    cacheLife('hours');
+    cacheTag(`taxonomy-${slug}`);
+
+    const result = await getTaxonomies({ slug, is_visible_on_web: true });
+    return result.results[0] ?? null;
+}
+
+/**
+ * Get the visible children of a taxonomy by its parent id, with caching enabled.
+ */
+export async function getTaxonomyChildrenCached(parentId: string): Promise<TaxonomyInterface[]> {
+    'use cache';
+    cacheLife('hours');
+    cacheTag(`taxonomy-children-${parentId}`);
+
+    const result = await getTaxonomies({ parent: parentId, is_visible_on_web: true });
+    return result.results;
 }

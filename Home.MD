@@ -33,6 +33,7 @@ La página de inicio está compuesta por bloques modulares (posts CMS) que se pu
 | **Categorías** | `home-categories` | Grilla de categorías con imágenes | Navegación visual |
 | **Productos** | `home-products-by-category` | Lista de productos de una categoría | Mostrar stock destacado |
 | **HTML Libre** | `home-html` | HTML personalizado | Anuncios, promos, dividers |
+| **Sección TikTok** | `tik-tok-section` | Carrusel/grid de videos de TikTok embebidos | Prueba social, contenido de redes |
 
 ---
 
@@ -84,6 +85,7 @@ La página de inicio está compuesta por bloques modulares (posts CMS) que se pu
     { "name": "Home", "slug": "home-block" },
     { "name": "Categorías", "slug": "home-categories" }
   ],
+  "link": "/search",
   "ordering": 2,
   "parent": {
     "slug": "ecommerce-home",
@@ -96,6 +98,7 @@ La página de inicio está compuesta por bloques modulares (posts CMS) que se pu
 - `body`: JSON con array `items`:
   - `slug`: Slug de la categoría (navegación)
   - `image`: Imagen de la categoría (recomendado: 300x300px)
+- `link`: URL del botón "Ver todas" (opcional). Si no se define, cae a `/search`.
 
 ---
 
@@ -258,6 +261,114 @@ Solo imagen, opcionalmente con link (sin botón visible):
 - Uso: Dividers, banners, texto libre, widgets personalizados
 
 ---
+
+### 5️⃣ Barra de anuncio con html Personalizado
+
+**Slug:** `barra-de-anuncio` | **Típicamente:** Arriba del navbar
+
+```json
+{
+  "slug": "barra-de-anuncio",
+  "title": null,
+  "excerpt": null,
+  "body": "<div class=\"promo\">Envíos gratis desde $999</div>",
+  "categories": [
+    { "name": "Home", "slug": "home-block" },
+    { "name": "HTML", "slug": "home-html" }
+  ]
+}
+```
+
+### 6 Banner para promociones
+
+**Para activarlo en el CMS, crea un post hijo de ecommerce-home con:**
+
+**Categoría:** home-promo-banner
+**Título:** el texto a mostrar
+**Link:** URL de destino
+**Body (JSON opcional):** {"subtitle": "texto pequeño arriba", "buttonText": "Ver oferta"}
+**Ordering:** el número que define su posición en la home
+
+
+``` json
+{
+  "slug": "promocion-primavera-verano",
+  "title": "Promocion primavera verano",
+  "excerpt": null,
+  "body": "{"subtitle": "texto pequeño arriba", "buttonText": "Ver oferta"}",
+  "categories": [
+    { "name": "Home", "slug": "home-block" },
+    { "name": "HTML", "slug": "home-promo-banner" }
+  ]
+}
+```
+---
+
+### 7️⃣ Sección TikTok (Contenedor)
+
+**Slug de categoría:** `tik-tok-section` | **Típicamente:** Ordering final
+
+Este es un bloque **contenedor**, igual que `home-banner-slider`: agrupa múltiples videos de TikTok (items hijos) que se muestran como carrusel o grid según el ancho de pantalla y la cantidad de videos.
+
+```json
+{
+  "slug": "ecommerce-home-tiktok",
+  "title": "Síguenos en TikTok",
+  "excerpt": "@meridamayoreo",
+  "body": null,
+  "categories": [
+    { "name": "Home", "slug": "home-block" },
+    { "name": "TikTok", "slug": "tik-tok-section" }
+  ],
+  "ordering": 7,
+  "parent": {
+    "slug": "ecommerce-home",
+    "title": "Inicio"
+  }
+}
+```
+
+**Campos importantes:**
+- `title` / `excerpt`: Encabezado opcional de la sección (título grande + texto pequeño arriba)
+- `body`: No se usa en el contenedor (puede ir `null`)
+- `slug` del post contenedor: puede ser cualquiera — los items se enlazan por `parent`, no hace falta que el slug sea literalmente `tik-tok-section` (eso es solo la categoría que identifica el tipo de bloque)
+
+**Comportamiento responsive:**
+- Menos de 780px de ancho: **siempre carrusel**, sin importar cuántos videos haya
+- 780px o más: **grid** si hay 3 videos o menos, **carrusel** si hay más de 3
+
+---
+
+### 7.1 Items de la sección - Video de TikTok
+
+**Slug:** Personalizado | **Parent:** slug del post contenedor (ej. `ecommerce-home-tiktok`) | **Ordering:** 1, 2, 3...
+
+El `body` de cada item es **HTML personalizado, no hardcodeado**: se pega tal cual el snippet que entrega TikTok al usar su opción "Embed" en un video (Compartir → Insertar).
+
+```json
+{
+  "slug": "ecommerce-home-tiktok-video-1",
+  "title": null,
+  "excerpt": null,
+  "body": "<blockquote class=\"tiktok-embed\" cite=\"https://www.tiktok.com/@meridamayoreo/video/7660555753924644104\" data-video-id=\"7660555753924644104\"><section></section></blockquote>",
+  "categories": [
+    { "name": "Home", "slug": "home-block" }
+  ],
+  "ordering": 1,
+  "parent": {
+    "slug": "ecommerce-home-tiktok",
+    "title": "Síguenos en TikTok"
+  }
+}
+```
+
+**Campos importantes:**
+- `body`: HTML crudo del embed de TikTok (o cualquier otro embed/HTML personalizado) — se renderiza tal cual, sin sanitizar
+- `title`, `excerpt`: No se usan para los items, pueden ir `null`
+- No es necesario pegar el `<script>` de TikTok en cada item: el sitio ya carga `tiktok.com/embed.js` una sola vez por sección
+
+---
+
 
 ## 📐 Orden Recomendado
 
