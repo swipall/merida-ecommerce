@@ -15,7 +15,7 @@ import { Suspense } from 'react';
 
 async function getCollectionProducts(slug: string, searchParams: { [key: string]: string | string[] | undefined }, customerId?: string) {
     'use cache';
-    cacheLife('hours');
+    cacheLife('minutes');
     cacheTag(`collection-${slug}`);
 
     const params = buildSearchInput({
@@ -27,9 +27,27 @@ async function getCollectionProducts(slug: string, searchParams: { [key: string]
     return results;
 }
 
+async function getParentTaxonomy(slug: string) {
+    'use cache';
+    cacheLife('minutes');
+    cacheTag(`collection-parent-${slug}`);
+
+    const parent = await getTaxonomies({ slug, is_visible_on_web: true });
+    return parent.results[0] ?? null;
+}
+
+async function getChildTaxonomies(parentId: string) {
+    'use cache';
+    cacheLife('minutes');
+    cacheTag(`collection-taxonomies-${parentId}`);
+
+    const children = await getTaxonomies({ parent: parentId, is_visible_on_web: true });
+    return children.results;
+}
+
 async function getTaxonomyProductCounts(taxonomySlugs: string[]) {
     'use cache';
-    cacheLife('hours');
+    cacheLife('minutes');
 
     const counts = await Promise.all(
         taxonomySlugs.map(async (slug) => {
@@ -42,13 +60,12 @@ async function getTaxonomyProductCounts(taxonomySlugs: string[]) {
 
 async function getCollectionMetadata(slug: string) {
     'use cache';
-    cacheLife('hours');
+    cacheLife('minutes');
     cacheTag(`collection-meta-${slug}`);
 
-    // return await getCollection(slug);
-    // const taxonomies = await getTaxonomies({ parent__slug: slug });
-    // console.log('Taxonomies:', taxonomies);
-    return { data: { name: '', slug: slug } }
+    const taxonomy = await getParentTaxonomy(slug);
+    const name = taxonomy?.value ?? taxonomy?.name ?? '';
+    return { data: { name, slug } }
 }
 
 export async function generateMetadata({
@@ -94,15 +111,20 @@ export default async function CollectionPage({ params, searchParams }: PageProps
 
     const customerId = await getAuthUserCustomerId();
     const productDataPromise = getCollectionProducts(slug, searchParamsResolved, customerId);
-    const taxonomies = await getTaxonomies({ parent__slug: slug });
-    const taxonomyCounts = await getTaxonomyProductCounts(taxonomies.results.map(t => t.slug));
+    const parentTaxonomy = await getParentTaxonomy(slug);
+    const collectionName = parentTaxonomy?.value ?? parentTaxonomy?.name ?? '';
+    const taxonomies = parentTaxonomy ? await getChildTaxonomies(parentTaxonomy.id) : [];
+    const taxonomyCounts = await getTaxonomyProductCounts(taxonomies.map(t => t.slug));
     return (
-        <div className="container mx-auto px-4 py-8 mt-[100] sm:mt-16">
+        <div className="container mx-auto px-4 py-8 sm:mt-16">
+            {collectionName && (
+                <h1 className="font-jost text-2xl font-black uppercase tracking-[1px] mb-6">{collectionName}</h1>
+            )}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <aside className="lg:col-span-1">
                     <div className='font-bold text-sm text-primary uppercase'>Categorías</div>
                     <Suspense fallback={<div className="h-64 animate-pulse bg-muted rounded-lg" />}>
-                        <FacetFilters taxonomies={taxonomies.results} searchParams={searchParamsResolved} counts={taxonomyCounts} />
+                        <FacetFilters taxonomies={taxonomies} searchParams={searchParamsResolved} counts={taxonomyCounts} />
                     </Suspense>
                 </aside>
                 <div className="lg:col-span-3">

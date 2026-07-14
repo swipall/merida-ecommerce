@@ -10,7 +10,7 @@ import ProductExtraMaterialsComponent from '@/components/commerce/product-extra-
 export async function CartItems({ activeOrder }: { activeOrder: Order | null }) {
     if (!activeOrder || !activeOrder.lines || activeOrder.lines.length === 0) {
         return (
-            <div className="container mx-auto px-4 py-16">
+            <div className="container bg-card rounded-2xl mx-auto px-4 py-16">
                 <div className="text-center">
                     <h1 className="text-3xl font-bold mb-4">Tu carrito está vacío</h1>
                     <p className="text-foreground mb-8">

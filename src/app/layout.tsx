@@ -1,12 +1,15 @@
 import type {Metadata, Viewport} from "next";
-import {Geist, Geist_Mono} from "next/font/google";
+import {Geist, Geist_Mono, Jost, Inter} from "next/font/google";
 import "./globals.css";
+import {Suspense} from "react";
 import {Toaster} from "@/components/ui/sonner";
 import {Navbar} from "@/components/layout/navbar";
 import {Footer} from "@/components/layout/footer";
+import {MobileBottomNav} from "@/components/layout/mobile-bottom-nav";
 import {ThemeProvider} from "@/components/providers/theme-provider";
 import {PriceListProvider} from "@/components/providers/price-list-provider";
-import {SITE_NAME, SITE_URL} from "@/lib/metadata";
+import {SITE_URL} from "@/lib/metadata";
+import {getSiteFaviconUrl, getSiteName, getSiteDescription} from "@/lib/swipall/site-assets";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -18,34 +21,58 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-    metadataBase: new URL(SITE_URL),
-    title: {
-        default: SITE_NAME,
-        template: `%s | ${SITE_NAME}`,
-    },
-    description:
-        "Shop the best products at Vendure Store. Quality products, competitive prices, and fast delivery.",
-    openGraph: {
-        type: "website",
-        siteName: SITE_NAME,
-        locale: "en_US",
-    },
-    twitter: {
-        card: "summary_large_image",
-    },
-    robots: {
-        index: true,
-        follow: true,
-        googleBot: {
+const jost = Jost({
+    variable: "--font-jost",
+    subsets: ["latin"],
+    weight: ["400", "600", "700", "800"],
+    display: "swap",
+});
+
+const inter = Inter({
+    variable: "--font-inter",
+    subsets: ["latin"],
+    weight: ["300", "400", "500"],
+    display: "swap",
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+    const [faviconUrl, siteName, siteDescription] = await Promise.all([
+        getSiteFaviconUrl(),
+        getSiteName(),
+        getSiteDescription(),
+    ]);
+
+    return {
+        metadataBase: new URL(SITE_URL),
+        title: {
+            default: siteName,
+            template: `%s | ${siteName}`,
+        },
+        description: siteDescription ?? undefined,
+        icons: faviconUrl
+            ? { icon: faviconUrl, shortcut: faviconUrl, apple: faviconUrl }
+            : undefined,
+        openGraph: {
+            type: "website",
+            siteName: siteName,
+            locale: "en_US",
+        },
+        twitter: {
+            card: "summary_large_image",
+        },
+        robots: {
             index: true,
             follow: true,
-            "max-video-preview": -1,
-            "max-image-preview": "large",
-            "max-snippet": -1,
+            googleBot: {
+                index: true,
+                follow: true,
+                "max-video-preview": -1,
+                "max-image-preview": "large", 
+                "max-snippet": -1,
+            },
         },
-    },
-};
+    };
+}
 
 export const viewport: Viewport = {
     width: "device-width",
@@ -61,13 +88,16 @@ export default function RootLayout({children}: LayoutProps<'/'>) {
     return (
         <html lang="en" suppressHydrationWarning>
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
+                className={`${geistSans.variable} ${geistMono.variable} ${jost.variable} ${inter.variable} antialiased flex flex-col min-h-screen pb-16 lg:pb-0`}
             >
                 <ThemeProvider>
                     <PriceListProvider>
                         <Navbar />
                         {children}
                         <Footer />
+                        <Suspense fallback={null}>
+                            <MobileBottomNav />
+                        </Suspense>
                         <Toaster />
                     </PriceListProvider>
                 </ThemeProvider>
