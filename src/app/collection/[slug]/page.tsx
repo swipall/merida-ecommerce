@@ -8,7 +8,9 @@ import {
     SITE_NAME
 } from '@/lib/metadata';
 import { buildSearchInput, getCurrentPage } from '@/lib/search-helpers';
+import { getTaxonomyBySlugCached, getTaxonomyChildrenCached } from '@/lib/swipall/cached';
 import { getTaxonomies, searchProducts } from '@/lib/swipall/rest-adapter';
+import { sortByLabel } from '@/lib/swipall/taxonomy-helpers';
 import type { Metadata } from 'next';
 import { cacheLife, cacheTag } from 'next/cache';
 import { Suspense } from 'react';
@@ -27,30 +29,6 @@ async function getCollectionProducts(slug: string, searchParams: { [key: string]
     return results;
 }
 
-async function getParentTaxonomy(slug: string) {
-    'use cache';
-    cacheLife('hours');
-    cacheTag(`collection-parent-${slug}`);
-
-    const parent = await getTaxonomies({ slug, is_visible_on_web: true });
-    return parent.results[0] ?? null;
-}
-
-async function getChildTaxonomies(parentId: string) {
-    'use cache';
-    cacheLife('hours');
-    cacheTag(`collection-taxonomies-${parentId}`);
-
-    const children = await getTaxonomies({ parent: parentId, is_visible_on_web: true });
-    return children.results;
-}
-
-function sortByLabel<T extends { value: string | null; name: string }>(items: T[]): T[] {
-    return [...items].sort((a, b) =>
-        (a.value ?? a.name).localeCompare(b.value ?? b.name, 'es', { sensitivity: 'base' })
-    );
-}
-
 async function getAllCategoryGroups() {
     'use cache';
     cacheLife('hours');
@@ -60,7 +38,7 @@ async function getAllCategoryGroups() {
     const groups = await Promise.all(
         sortByLabel(parents.results).map(async (parent) => ({
             parent,
-            children: sortByLabel(await getChildTaxonomies(parent.id)),
+            children: sortByLabel(await getTaxonomyChildrenCached(parent.id)),
         }))
     );
     return groups;
@@ -84,7 +62,7 @@ async function getCollectionMetadata(slug: string) {
     cacheLife('hours');
     cacheTag(`collection-meta-${slug}`);
 
-    const taxonomy = await getParentTaxonomy(slug);
+    const taxonomy = await getTaxonomyBySlugCached(slug);
     const name = taxonomy?.value ?? taxonomy?.name ?? '';
     return { data: { name, slug } }
 }
@@ -132,7 +110,7 @@ export default async function CollectionPage({ params, searchParams }: PageProps
 
     const customerId = await getAuthUserCustomerId();
     const productDataPromise = getCollectionProducts(slug, searchParamsResolved, customerId);
-    const parentTaxonomy = await getParentTaxonomy(slug);
+    const parentTaxonomy = await getTaxonomyBySlugCached(slug);
     const collectionName = parentTaxonomy?.value ?? parentTaxonomy?.name ?? '';
     const categoryGroups = await getAllCategoryGroups();
     const allTaxonomySlugs = categoryGroups.flatMap(g => [g.parent.slug, ...g.children.map(c => c.slug)]);
