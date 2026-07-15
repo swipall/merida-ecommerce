@@ -62,4 +62,4 @@ jobs:
           user: 'dante'
           ssh_private_key: '${{ secrets.PRIVATE_KEY }}'
           command: >
-                sh /home/dante/swip-merida-ecommerce/deploy.sh
+                sh /home/dante/swip-merida-ecommerce/deploy.sh ${{ github.sha }} 
