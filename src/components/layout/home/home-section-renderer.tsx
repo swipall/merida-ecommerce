@@ -1,4 +1,3 @@
-import { cacheLife, cacheTag } from "next/cache";
 import type { CmsPost } from "@/lib/swipall/types/types";
 import { getHomeBlockType, type HomeBlockType } from "./home-section-types";
 import { HomeBannerSection } from "./sections/home-banner-section";
@@ -27,26 +26,12 @@ const SECTION_RENDERERS: Record<HomeBlockType, (props: { post: CmsPost; items?: 
 };
 
 
-const USER_DEPENDENT_SECTIONS: HomeBlockType[] = ["home-products-by-category"];
-
-async function CachedSectionRenderer({ post }: HomeSectionRendererProps) {
-    "use cache";
-    cacheLife("minutes");
-    cacheTag(`home-section-${post.slug}`);
-    const type = getHomeBlockType(post);
-    if (!type) return null;
-    const Renderer = SECTION_RENDERERS[type];
-    return <Renderer post={post} />;
-}
-
+// Caching disabled until the CMS revalidation webhook lands (see
+// docs/features/cms-revalidation-webhook.md) — CMS edits must show up immediately.
 export async function HomeSectionRenderer({ post }: HomeSectionRendererProps) {
     const type = getHomeBlockType(post);
     if (!type) return null;
 
-    if (USER_DEPENDENT_SECTIONS.includes(type)) {
-        const Renderer = SECTION_RENDERERS[type];
-        return <Renderer post={post} />;
-    }
-
-    return <CachedSectionRenderer post={post} />;
+    const Renderer = SECTION_RENDERERS[type];
+    return <Renderer post={post} />;
 }
