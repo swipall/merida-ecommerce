@@ -59,21 +59,25 @@ export async function getCatalogs(params: Record<string, any> = {}): Promise<Int
 }
 
 /**
- * Resolve a visible taxonomy by its slug.
- * Caching disabled until the CMS revalidation webhook lands (see
- * docs/features/cms-revalidation-webhook.md) — CMS edits must show up immediately.
+ * Resolve a visible taxonomy by its slug, with caching enabled.
  */
 export async function getTaxonomyBySlugCached(slug: string): Promise<TaxonomyInterface | null> {
+    'use cache';
+    cacheLife('minutes');
+    cacheTag(`taxonomy-${slug}`);
+
     const result = await getTaxonomies({ slug, is_visible_on_web: true });
     return result.results[0] ?? null;
 }
 
 /**
- * Get the visible children of a taxonomy by its parent id.
- * Caching disabled until the CMS revalidation webhook lands (see
- * docs/features/cms-revalidation-webhook.md) — CMS edits must show up immediately.
+ * Get the visible children of a taxonomy by its parent id, with caching enabled.
  */
 export async function getTaxonomyChildrenCached(parentId: string): Promise<TaxonomyInterface[]> {
+    'use cache';
+    cacheLife('minutes');
+    cacheTag(`taxonomy-children-${parentId}`);
+
     const result = await getTaxonomies({ parent: parentId, is_visible_on_web: true });
     return result.results;
 }

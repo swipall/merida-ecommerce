@@ -3,10 +3,13 @@ import { NavbarDropdownItem } from '@/components/layout/navbar/navbar-dropdown-i
 import { getMenuItemHref } from '@/components/layout/navbar/navbar-menu-helpers';
 import { getPosts } from '@/lib/swipall/rest-adapter';
 import { CmsPost } from '@/lib/swipall/types/types';
+import { cacheLife, cacheTag } from 'next/cache';
 
-// Caching disabled until the CMS revalidation webhook lands (see
-// docs/features/cms-revalidation-webhook.md) — CMS edits must show up immediately.
 export async function NavbarCollections() {
+    "use cache";
+    cacheLife('minutes');
+    cacheTag('navbar-collections');
+
     const topLevel = await getPosts({ parent__slug: 'menu-principal', ordering: 'ordering' });
 
     const itemsWithChildren = await Promise.all(
