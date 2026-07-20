@@ -19,5 +19,11 @@ export async function setCartId(cartId: string) {
 
 export async function clearCartId() {
     const cookieStore = await cookies();
-    cookieStore.delete(CART_ID_COOKIE);
+    cookieStore.set(CART_ID_COOKIE, '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 0,
+    });
 }

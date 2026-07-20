@@ -1,8 +1,8 @@
-import { clearCartId } from '@/lib/cart';
 import { getActiveOrder } from '@/lib/swipall/rest-adapter';
 import { SwipallAPIError } from '@/lib/swipall/api';
 import { cacheLife, cacheTag } from 'next/cache';
 import { CartIcon } from './cart-icon';
+import { NavbarCartCleaner } from './navbar-cart-cleaner';
 
 async function getCartItemCount(): Promise<number> {
     'use cache: private';
@@ -20,7 +20,12 @@ export async function NavbarCart() {
         return <CartIcon cartItemCount={cartItemCount} />;
     } catch (error) {
         if (error instanceof SwipallAPIError && error.status === 404) {
-            await clearCartId();
+            return (
+                <>
+                    <NavbarCartCleaner />
+                    <CartIcon cartItemCount={0} />
+                </>
+            );
         }
         return <CartIcon cartItemCount={0} />;
     }
