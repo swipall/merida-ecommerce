@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { adaptSerializedBlocks, type AdaptedBlock, type SerializedBlockNode } from "./serialized-block-adapter";
-import { renderPreviewBlock } from "./render-preview-block";
 import { HomeHeroSkeleton } from "@/components/shared/skeletons/home-hero-skeleton";
 import { HomeCategoriesSkeleton } from "@/components/shared/skeletons/home-categories-skeleton";
 import { HomeProductGridSkeleton } from "@/components/shared/skeletons/home-product-grid-skeleton";
@@ -51,17 +50,19 @@ function skeletonForType(type: string) {
 }
 
 interface PreviewHomeClientProps {
-    allowedOrigin: string;
+    allowedOrigins: string[];
 }
 
-export function PreviewHomeClient({ allowedOrigin }: PreviewHomeClientProps) {
+export function PreviewHomeClient({ allowedOrigins }: PreviewHomeClientProps) {
     const [blocks, setBlocks] = useState<AdaptedBlock[]>([]);
     const readySentRef = useRef(false);
+    const activeOriginRef = useRef<string>(allowedOrigins[0]);
 
     useEffect(() => {
         function handleMessage(event: MessageEvent) {
-            if (event.origin !== allowedOrigin) return;
+            if (!allowedOrigins.includes(event.origin)) return;
             if (!isPreviewSyncMessage(event.data)) return;
+            activeOriginRef.current = event.origin;
             setBlocks(adaptSerializedBlocks(event.data.payload.blocks));
         }
 
@@ -69,11 +70,14 @@ export function PreviewHomeClient({ allowedOrigin }: PreviewHomeClientProps) {
 
         if (!readySentRef.current) {
             readySentRef.current = true;
-            window.parent.postMessage({ type: "swipall-cms:ready" }, allowedOrigin);
+            for (const origin of allowedOrigins) {
+                window.parent.postMessage({ type: "swipall-cms:ready" }, origin);
+            }
         }
 
         return () => window.removeEventListener("message", handleMessage);
-    }, [allowedOrigin]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (blocks.length === 0) {
         return null;
@@ -82,16 +86,22 @@ export function PreviewHomeClient({ allowedOrigin }: PreviewHomeClientProps) {
     return (
         <div className="min-h-screen">
             {blocks.map((block) => (
-                <BlockBoundary key={block.node.id} block={block} allowedOrigin={allowedOrigin} />
+                <BlockBoundary key={block.node.id} block={block} activeOriginRef={activeOriginRef} />
             ))}
         </div>
     );
 }
 
-function BlockBoundary({ block, allowedOrigin }: { block: AdaptedBlock; allowedOrigin: string }) {
+function BlockBoundary({
+    block,
+    activeOriginRef,
+}: {
+    block: AdaptedBlock;
+    activeOriginRef: RefObject<string>;
+}) {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const lastReportedRef = useRef<{ status: BlockStatus; top: number; height: number } | null>(null);
-    const [content, setContent] = useState<ReactNode>(null);
+    const [html, setHtml] = useState<string | null>(null);
     const [status, setStatus] = useState<BlockStatus>("loading");
 
     const report = (nextStatus: BlockStatus) => {
@@ -112,24 +122,30 @@ function BlockBoundary({ block, allowedOrigin }: { block: AdaptedBlock; allowedO
                 type: "swipall-cms:block-rendered",
                 payload: { blockId: block.node.id, status: nextStatus, boundingRect },
             },
-            allowedOrigin,
+            activeOriginRef.current,
         );
     };
 
-    const blockContentKey = useMemo(() => JSON.stringify(block.node), [block.node]);
+    const flattenNodes = (b: AdaptedBlock): SerializedBlockNode[] => [b.node, ...b.children.flatMap(flattenNodes)];
+    const blockContentKey = useMemo(() => JSON.stringify(flattenNodes(block)), [block]);
 
     useEffect(() => {
         let cancelled = false;
         setStatus("loading");
         report("loading");
 
-        renderPreviewBlock(block)
-            .then((rendered) => {
+        fetch("/api/preview/render-block", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(flattenNodes(block)),
+        })
+            .then((res) => {
+                if (!res.ok) throw new Error("render failed");
+                return res.json() as Promise<{ html: string; status: BlockStatus }>;
+            })
+            .then(({ html: rendered, status: resolvedStatus }) => {
                 if (cancelled) return;
-                setContent(rendered);
-                const el = wrapperRef.current;
-                const statusEl = el?.querySelector<HTMLElement>("[data-block-status]");
-                const resolvedStatus = (statusEl?.dataset.blockStatus as BlockStatus | undefined) ?? "hydrated";
+                setHtml(rendered);
                 setStatus(resolvedStatus);
             })
             .catch(() => {
@@ -153,11 +169,15 @@ function BlockBoundary({ block, allowedOrigin }: { block: AdaptedBlock; allowedO
 
         return () => resizeObserver.disconnect();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [status, content]);
+    }, [status, html]);
 
     return (
         <div ref={wrapperRef} data-block-id={block.node.id}>
-            {content ?? skeletonForType(block.node.type)}
+            {html !== null ? (
+                <div dangerouslySetInnerHTML={{ __html: html }} />
+            ) : (
+                skeletonForType(block.node.type)
+            )}
         </div>
     );
 }

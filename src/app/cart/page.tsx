@@ -4,8 +4,8 @@ import {CartItems} from "@/app/cart/cart-items";
 import {Suspense} from "react";
 import {CartSkeleton} from "@/components/shared/skeletons/cart-skeleton";
 import {noIndexRobots} from '@/lib/metadata';
-import {clearCartId} from '@/lib/cart';
 import {SwipallAPIError} from '@/lib/swipall/api';
+import {NavbarCartCleaner} from '@/components/layout/navbar/navbar-cart-cleaner';
 
 export const metadata: Metadata = {
     title: 'Carrito de compras',
@@ -18,8 +18,12 @@ async function CartBoundary() {
         return await Cart();
     } catch (error) {
         if (error instanceof SwipallAPIError && error.status === 404) {
-            await clearCartId();
-            return <CartItems activeOrder={null} />;
+            return (
+                <>
+                    <NavbarCartCleaner />
+                    <CartItems activeOrder={null} />
+                </>
+            );
         }
         throw error;
     }

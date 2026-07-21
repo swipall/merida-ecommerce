@@ -3,6 +3,7 @@
 import { clearCartId, setCartId } from '@/lib/cart';
 import { getCartItems, getCurrentCart, getOrderDetail } from '@/lib/swipall/rest-adapter';
 import { OrderDetailInterface } from '@/lib/swipall/users/user.types';
+import { updateTag } from 'next/cache';
 
 export async function saveCartIdAction(cartId: string) {
     try {
@@ -16,6 +17,8 @@ export async function saveCartIdAction(cartId: string) {
 export async function clearCartIdAction() {
     try {
         await clearCartId();
+        updateTag('cart');
+        updateTag('active-order');
     } catch (error) {
         throw error;
     }

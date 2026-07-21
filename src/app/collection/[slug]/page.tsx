@@ -17,7 +17,7 @@ import { Suspense } from 'react';
 
 async function getCollectionProducts(slug: string, searchParams: { [key: string]: string | string[] | undefined }, customerId?: string) {
     'use cache';
-    cacheLife('hours');
+    cacheLife('minutes');
     cacheTag(`collection-${slug}`);
 
     const params = buildSearchInput({
@@ -31,7 +31,7 @@ async function getCollectionProducts(slug: string, searchParams: { [key: string]
 
 async function getAllCategoryGroups() {
     'use cache';
-    cacheLife('hours');
+    cacheLife('minutes');
     cacheTag('taxonomy-category-tree');
 
     const parents = await getTaxonomies({ kind: 'category', is_visible_on_web: true });
@@ -46,7 +46,7 @@ async function getAllCategoryGroups() {
 
 async function getTaxonomyProductCounts(taxonomySlugs: string[]) {
     'use cache';
-    cacheLife('hours');
+    cacheLife('minutes');
 
     const counts = await Promise.all(
         taxonomySlugs.map(async (slug) => {
@@ -59,7 +59,7 @@ async function getTaxonomyProductCounts(taxonomySlugs: string[]) {
 
 async function getCollectionMetadata(slug: string) {
     'use cache';
-    cacheLife('hours');
+    cacheLife('minutes');
     cacheTag(`collection-meta-${slug}`);
 
     const taxonomy = await getTaxonomyBySlugCached(slug);

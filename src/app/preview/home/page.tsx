@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { timingSafeEqual } from "crypto";
 import { Suspense } from "react";
 import { PreviewHomeClient } from "@/components/layout/home/preview/preview-home-client";
+import { PreviewAccessCookieSetter } from "./preview-access-cookie-setter";
 
 const PREVIEW_ACCESS_COOKIE = "swipall-preview-access";
 
@@ -31,9 +32,12 @@ async function PreviewHomeGuard({
     searchParams: Promise<{ pk?: string }>;
 }) {
     const secret = process.env.PREVIEW_ACCESS_SECRET;
-    const allowedOrigin = process.env.CMS_EDITOR_ORIGIN;
+    const allowedOrigins = (process.env.CMS_EDITOR_ORIGIN ?? "")
+        .split(",")
+        .map((origin) => origin.trim())
+        .filter(Boolean);
 
-    if (!secret || !allowedOrigin) {
+    if (!secret || allowedOrigins.length === 0) {
         notFound();
     }
 
@@ -48,14 +52,10 @@ async function PreviewHomeGuard({
         notFound();
     }
 
-    if (hasValidQueryToken) {
-        cookieStore.set(PREVIEW_ACCESS_COOKIE, secret, {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            path: "/",
-        });
-    }
-
-    return <PreviewHomeClient allowedOrigin={allowedOrigin} />;
+    return (
+        <>
+            {hasValidQueryToken && <PreviewAccessCookieSetter pk={pk as string} />}
+            <PreviewHomeClient allowedOrigins={allowedOrigins} />
+        </>
+    );
 }

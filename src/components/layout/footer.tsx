@@ -26,7 +26,7 @@ async function fetchMenuChildren(parentSlug: string, kind: 'page' | 'post'): Pro
 
 async function Copyright() {
     'use cache';
-    cacheLife('days');
+    cacheLife('minutes');
     return (
         <div className='text-background/50'>
             © {new Date().getFullYear()} Mérida Mayoreo.
@@ -36,7 +36,7 @@ async function Copyright() {
 
 export async function Footer() {
     'use cache';
-    cacheLife('days');
+    cacheLife('minutes');
 
     const [logoUrl, siteName, siteDescription, menus] = await Promise.all([
         getSiteLogoUrl(),

@@ -150,7 +150,7 @@ export async function getCustomerAddresses(options?: { useAuthToken?: boolean })
 // Search Endpoints
 // ============================================================================
 export type SearchResult = InterfaceApiListResponse<InterfaceInventoryItem>;
-export async function searchProducts(input: SearchInput, customerId?: string): Promise<SearchResult> {
+export async function searchProducts(input: SearchInput, customerId?: string, options?: { noStore?: boolean }): Promise<SearchResult> {
     const params = new URLSearchParams();
     if (input.search) params.append('search', input.search);
     if (input.offset) params.append('offset', String(input.offset));
@@ -161,7 +161,7 @@ export async function searchProducts(input: SearchInput, customerId?: string): P
     if (customerId) params.append('customer_id', customerId);
     const endpoint = `/api/v1/shop/items`;
     const parsedParams = Object.fromEntries(params.entries());
-    return get<InterfaceApiListResponse<InterfaceInventoryItem>>(endpoint, parsedParams);
+    return get<InterfaceApiListResponse<InterfaceInventoryItem>>(endpoint, parsedParams, options?.noStore ? { fetch: { cache: 'no-store' } } : undefined);
 }
 
 // ============================================================================
