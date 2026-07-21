@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Script from "next/script";
 import {
     Carousel,
@@ -8,6 +9,8 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import type { CmsPost } from "@/lib/swipall/types/types";
 
 interface HomeTikTokSliderSectionProps {
@@ -15,14 +18,33 @@ interface HomeTikTokSliderSectionProps {
     items: CmsPost[];
 }
 
-// Below this width the section is always a carousel, regardless of item count.
-const MOBILE_ONLY = "min-[780px]:hidden";
-const DESKTOP_ONLY = "hidden min-[780px]:block";
-
-// Desktop/tablet only becomes a carousel once there are more items than fit in a row.
-const DESKTOP_CAROUSEL_THRESHOLD = 3;
-
 function TikTokEmbedItem({ item }: { item: CmsPost }) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!item.body?.trim() || !container) return;
+
+        // TikTok's embed.js swaps the blockquote for an <iframe> once the video is ready —
+        // watch for that instead of guessing a fixed load time.
+        const observer = new MutationObserver(() => {
+            if (container.querySelector("iframe")) {
+                setLoaded(true);
+                observer.disconnect();
+            }
+        });
+        observer.observe(container, { childList: true, subtree: true });
+
+        // Don't hide the video behind the skeleton forever if embed.js is blocked or slow.
+        const timeout = setTimeout(() => setLoaded(true), 8000);
+
+        return () => {
+            observer.disconnect();
+            clearTimeout(timeout);
+        };
+    }, [item.body]);
+
     if (!item.body?.trim()) return null;
 
     // item.body is arbitrary HTML entered by the admin in the CMS (e.g. a TikTok
@@ -31,18 +53,23 @@ function TikTokEmbedItem({ item }: { item: CmsPost }) {
     // which otherwise wins over our width classes and makes it overflow narrow
     // slides — override it (and the inline max-width) with !important.
     return (
-        <div
-            className="w-full max-w-[325px] mx-auto [&_blockquote]:w-full! [&_blockquote]:min-w-0! [&_blockquote]:max-w-full! [&_blockquote]:mx-auto"
-            dangerouslySetInnerHTML={{ __html: item.body }}
-        />
+        <div className="w-full max-w-[325px] mx-auto">
+            {!loaded && <Skeleton className="aspect-[9/16] w-full rounded-lg" />}
+            <div
+                ref={containerRef}
+                className={cn(
+                    "w-full [&_blockquote]:w-full! [&_blockquote]:min-w-0! [&_blockquote]:max-w-full! [&_blockquote]:mx-auto",
+                    !loaded && "hidden"
+                )}
+                dangerouslySetInnerHTML={{ __html: item.body }}
+            />
+        </div>
     );
 }
 
 export function HomeTikTokSliderSection({ post, items }: HomeTikTokSliderSectionProps) {
     const videos = items.filter((item) => item.body?.trim());
     if (videos.length === 0) return null;
-
-    const useDesktopCarousel = videos.length > DESKTOP_CAROUSEL_THRESHOLD;
 
     return (
         <section className="container mx-auto px-4 py-8 md:py-12">
@@ -64,50 +91,23 @@ export function HomeTikTokSliderSection({ post, items }: HomeTikTokSliderSection
                 </div>
             )}
 
-            {/* Mobile (<780px): always a carousel */}
-            <div className={MOBILE_ONLY}>
-                <Carousel opts={{ align: "center", loop: videos.length > 1 }} className="w-full">
-                    <CarouselContent className="gap-4">
-                        {videos.map((item) => (
-                            <CarouselItem key={item.slug} className="basis-[72%] py-1">
-                                <TikTokEmbedItem item={item} />
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                    {videos.length > 1 && (
-                        <div className="flex justify-center items-center gap-3 mt-4">
-                            <CarouselPrevious className="static translate-y-0" />
-                            <CarouselNext className="static translate-y-0" />
-                        </div>
-                    )}
-                </Carousel>
-            </div>
-
-            {/* Desktop/tablet (>=780px): carousel when more than 3 items, static grid otherwise */}
-            <div className={DESKTOP_ONLY}>
-                {useDesktopCarousel ? (
-                    <Carousel opts={{ align: "start", loop: true }} className="w-full">
-                        <CarouselContent className="gap-2">
-                            {videos.map((item) => (
-                                <CarouselItem key={item.slug} className="basis-1/2 lg:basis-1/3">
-                                    <TikTokEmbedItem item={item} />
-                                </CarouselItem>
-                            ))}
-                        </CarouselContent>
+            {/* Single carousel for all breakpoints: 2 videos per view on mobile, 3 on
+                desktop/tablet (>=780px) — avoids mounting (and embedding) every video twice. */}
+            <Carousel opts={{ align: "start" }} className="w-full">
+                <CarouselContent className="gap-2 min-[780px]:gap-4">
+                    {videos.map((item) => (
+                        <CarouselItem key={item.slug} className="basis-1/2 min-[780px]:basis-1/3">
+                            <TikTokEmbedItem item={item} />
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+                {videos.length > 1 && (
+                    <>
                         <CarouselPrevious className="left-2" />
                         <CarouselNext className="right-2" />
-                    </Carousel>
-                ) : (
-                    <div
-                        className="grid gap-6 justify-items-center"
-                        style={{ gridTemplateColumns: `repeat(${videos.length}, minmax(0, 1fr))` }}
-                    >
-                        {videos.map((item) => (
-                            <TikTokEmbedItem key={item.slug} item={item} />
-                        ))}
-                    </div>
+                    </>
                 )}
-            </div>
+            </Carousel>
         </section>
     );
 }
