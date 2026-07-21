@@ -10,10 +10,9 @@ interface TaxonomyGroup {
 interface FacetFiltersProps {
     groups: TaxonomyGroup[];
     searchParams: Record<string, string | string[] | undefined>;
-    counts?: Record<string, number>;
 }
 
-export function FacetFilters({ groups, searchParams, counts }: FacetFiltersProps) {
+export function FacetFilters({ groups, searchParams }: FacetFiltersProps) {
 
     const buildParams = (overrides: Record<string, string | null>) => {
         const params = new URLSearchParams();
@@ -112,11 +111,6 @@ export function FacetFilters({ groups, searchParams, counts }: FacetFiltersProps
                                                 className={`cursor-pointer transition-colors hover:text-primary flex items-center gap-2 ${child.slug === selectedSlug ? 'text-primary font-semibold' : ''}`}
                                             >
                                                 <span>{child.value ?? child.name}</span>
-                                                {counts?.[child.slug] !== undefined && (
-                                                    <span className="text-xs font-bold text-muted-foreground tabular-nums">
-                                                        ({counts[child.slug]})
-                                                    </span>
-                                                )}
                                             </a>
                                         </li>
                                     ))}
