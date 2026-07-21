@@ -5,11 +5,10 @@ import { parsePostBody } from "../home-section-types";
 import { CategoriesCarousel } from "./categories-carousel";
 
 interface HomeCategoriesBody {
-    items?: Array<{
+    categoryItems?: Array<{
         slug: string;
         image?: string;
         title?: string;
-        link: string;
     }>;
     viewAllHref?: string;
     eyebrow?: string;
@@ -21,7 +20,7 @@ interface HomeCategoriesSectionProps {
 
 export function HomeCategoriesSection({ post }: HomeCategoriesSectionProps) {
     const body = parsePostBody<HomeCategoriesBody>(post.body);
-    const items = body?.items ?? [];
+    const items = body?.categoryItems ?? [];
     const eyebrow = body?.eyebrow ?? post.excerpt ?? "EXPLORAR";
     const viewAllHref = post.link ?? body?.viewAllHref ?? "/search";
 
