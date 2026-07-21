@@ -42,6 +42,8 @@ export async function PreviewSectionRenderer({ block }: PreviewSectionRendererPr
             return <div data-block-status="hydrated"><PreviewHtmlSection post={post} /></div>;
         case "home-company-info":
             return <div data-block-status="hydrated"><PreviewCompanyInfoSection items={children.map((c) => c.post)} /></div>;
+        case "tik-tok-section":
+            return <div data-block-status="hydrated"><PreviewTikTokSliderSection post={post} items={children.map((c) => c.post)} /></div>;
         default:
             return null;
     }
@@ -202,14 +204,14 @@ function PreviewPromoBannerSection({ post }: { post: CmsPost }) {
 }
 
 interface HomeCategoriesBody {
-    items?: Array<{ slug: string; image?: string; title?: string; link: string }>;
+    categoryItems?: Array<{ slug: string; image?: string; title?: string }>;
     viewAllHref?: string;
     eyebrow?: string;
 }
 
 function PreviewCategoriesSection({ post }: { post: CmsPost }) {
     const body = parsePostBody<HomeCategoriesBody>(post.body);
-    const items = body?.items ?? [];
+    const items = body?.categoryItems ?? [];
     const eyebrow = body?.eyebrow ?? post.excerpt ?? "EXPLORAR";
     const viewAllHref = post.link ?? body?.viewAllHref ?? "/search";
 
@@ -227,7 +229,7 @@ function PreviewCategoriesSection({ post }: { post: CmsPost }) {
                 </div>
                 <div className="flex gap-4 overflow-x-auto">
                     {items.map((item) => (
-                        <a key={item.slug} href={item.link} className="shrink-0 w-32 text-center">
+                        <a key={item.slug} href={`/collection/${item.slug}`} className="shrink-0 w-32 text-center">
                             {item.image && (
                                 /* eslint-disable-next-line @next/next/no-img-element */
                                 <img src={item.image} alt={item.title ?? ""} className="w-32 h-32 object-cover rounded-lg" />
@@ -300,6 +302,32 @@ async function PreviewProductsByCategorySection({ post }: { post: CmsPost }) {
                 </div>
             </section>
         </div>
+    );
+}
+
+function PreviewTikTokSliderSection({ post, items }: { post: CmsPost; items: CmsPost[] }) {
+    const videos = items.filter((item) => item.body?.trim());
+    if (videos.length === 0) return null;
+
+    return (
+        <section className="container mx-auto px-4 py-8 md:py-12">
+            {(post.title || post.excerpt) && (
+                <div className="text-left mb-8">
+                    {post.excerpt && (
+                        <h4 className="text-accent font-bold uppercase tracking-widest text-sm">{post.excerpt}</h4>
+                    )}
+                    {post.title && (
+                        <h2 className="text-2xl md:text-3xl font-bold uppercase mt-1">{post.title}</h2>
+                    )}
+                </div>
+            )}
+            {/* Static preview: shows every video's raw embed HTML in a wrapped row, no carousel behavior */}
+            <div className="flex flex-wrap gap-4">
+                {videos.map((item) => (
+                    <div key={item.slug} className="w-full max-w-[325px] basis-1/2 min-[780px]:basis-1/3 flex-1" dangerouslySetInnerHTML={{ __html: item.body }} />
+                ))}
+            </div>
+        </section>
     );
 }
 
