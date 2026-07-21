@@ -100,6 +100,10 @@ export async function getPosts(params: any): Promise<InterfaceApiListResponse<Cm
     return get<InterfaceApiListResponse<CmsPost>>('/api/v1/cms/posts', params);
 }
 
+export async function getPages(params: any): Promise<InterfaceApiListResponse<CmsPost>> {
+    return get<InterfaceApiListResponse<CmsPost>>('/api/v1/cms/pages', params);
+}
+
 export async function getPostDetail(slug: string): Promise<CmsPost | null> {
     try {
         const response = await get<any>(`/api/v1/cms/post/${slug}`);

@@ -1,4 +1,4 @@
-import { getPosts } from '@/lib/swipall/rest-adapter';
+import { getPages, getPosts } from '@/lib/swipall/rest-adapter';
 import { CmsPost } from '@/lib/swipall/types/types';
 import { cacheLife } from 'next/cache';
 import Image from "next/image";
@@ -9,14 +9,15 @@ const FALLBACK_LOGO =
     "https://mmcb.b-cdn.net/media/attachments/f/f/e/6/c77a2aed2634f9a90555c2db1507cad8ea06a1c4bf34c2e46ac3aeab0f61/logo-merida.png";
 
 const FOOTER_MENUS = [
-    { slug: 'informacion', title: 'Información' },
-    { slug: 'ayuda', title: 'Ayuda' },
-    { slug: 'datos-de-contacto', title: 'Datos de Contacto' },
-];
+    { slug: 'informacion', title: 'Información', kind: 'page' },
+    { slug: 'ayuda', title: 'Ayuda', kind: 'page' },
+    { slug: 'datos-de-contacto', title: 'Datos de Contacto', kind: 'post' },
+] as const;
 
-async function fetchMenuChildren(parentSlug: string): Promise<CmsPost[]> {
+async function fetchMenuChildren(parentSlug: string, kind: 'page' | 'post'): Promise<CmsPost[]> {
     try {
-        const res = await getPosts({ parent__slug: parentSlug, ordering: 'ordering' });
+        const fetcher = kind === 'page' ? getPages : getPosts;
+        const res = await fetcher({ parent__slug: parentSlug, ordering: 'ordering' });
         return res?.results ?? [];
     } catch {
         return [];
@@ -44,7 +45,7 @@ export async function Footer() {
         Promise.all(
             FOOTER_MENUS.map(async (menu) => ({
                 ...menu,
-                items: await fetchMenuChildren(menu.slug),
+                items: await fetchMenuChildren(menu.slug, menu.kind),
             }))
         ),
     ]);
