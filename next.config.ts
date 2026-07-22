@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
 
     cacheComponents: true,
 
+    // Shared Redis-backed cache for 'use cache: remote' so cache entries survive
+    // across Cloud Run instances/deploys. Falls back to Next's in-memory default
+    // handler for plain 'use cache' when REDIS_URL isn't set (e.g. local dev).
+    cacheHandlers: {
+        remote: require.resolve('./cache-handlers/redis-remote-handler.ts'),
+    },
+
     turbopack: {
         root: path.join(__dirname),
     },

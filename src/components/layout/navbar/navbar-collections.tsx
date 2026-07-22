@@ -6,8 +6,8 @@ import { CmsPost } from '@/lib/swipall/types/types';
 import { cacheLife, cacheTag } from 'next/cache';
 
 export async function NavbarCollections() {
-    "use cache";
-    cacheLife('minutes');
+    "use cache: remote";
+    cacheLife('hours');
     cacheTag('navbar-collections');
 
     const topLevel = await getPosts({ parent__slug: 'menu-principal', ordering: 'ordering' });

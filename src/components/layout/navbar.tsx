@@ -1,7 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { NavbarCollections } from '@/components/layout/navbar/navbar-collections';
-import { NavbarCart } from '@/components/layout/navbar/navbar-cart';
+import { NavbarCartCleaner } from '@/components/layout/navbar/navbar-cart-cleaner';
+import { CartIcon } from '@/components/layout/navbar/cart-icon';
+import { getNavbarCartResult } from '@/components/layout/navbar/navbar-cart';
 import { NavbarUser } from '@/components/layout/navbar/navbar-user';
 import { NavbarMobileHeader } from '@/components/layout/navbar/navbar-mobile-header';
 import { PromoBar } from '@/components/layout/navbar/promo-bar';
@@ -13,6 +15,22 @@ import { getSiteLogoUrl, getSiteName } from '@/lib/swipall/site-assets';
 const FALLBACK_LOGO =
     "https://mmcb.b-cdn.net/media/attachments/f/e/1/a/7db82f8034376f8cfe56fc1a9c4df7e439e587efbbf1b8a462560b93d778/logo-q.png";
 
+/**
+ * El slot mobile y el desktop cada uno instancia este componente, pero
+ * NavbarCartCleaner sólo se monta desde uno de los dos (mountCleaner) —
+ * antes ambos slots montaban su propio cleaner y competían limpiando el
+ * mismo cart-id inválido, causando un loop de refresh en home.
+ */
+async function NavbarCartSlot({ mountCleaner }: { mountCleaner: boolean }) {
+    const { cartItemCount, staleCartId } = await getNavbarCartResult();
+    return (
+        <>
+            {staleCartId && mountCleaner && <NavbarCartCleaner />}
+            <CartIcon cartItemCount={cartItemCount} />
+        </>
+    );
+}
+
 export async function Navbar() {
     const [logoUrl, siteName] = await Promise.all([
         getSiteLogoUrl(),
@@ -20,9 +38,14 @@ export async function Navbar() {
     ]);
     const logo = logoUrl ?? FALLBACK_LOGO;
 
-    const cartSlot = (
+    const mobileCartSlot = (
         <Suspense fallback={<div className="w-8 h-8" />}>
-            <NavbarCart />
+            <NavbarCartSlot mountCleaner={false} />
+        </Suspense>
+    );
+    const desktopCartSlot = (
+        <Suspense fallback={<div className="w-8 h-8" />}>
+            <NavbarCartSlot mountCleaner />
         </Suspense>
     );
 
@@ -34,7 +57,7 @@ export async function Navbar() {
             </Suspense>
 
             {/* Mobile header (< md) */}
-            <NavbarMobileHeader logoUrl={logo} siteName={siteName} cart={cartSlot} />
+            <NavbarMobileHeader logoUrl={logo} siteName={siteName} cart={mobileCartSlot} />
 
             {/* Desktop header (≥ md) */}
             <div className="hidden md:block container mx-auto px-4 lg:px-8">
@@ -68,7 +91,7 @@ export async function Navbar() {
                     {/* User + Cart */}
                     <div className="flex items-center gap-1 shrink-0">
                         <NavbarUser />
-                        {cartSlot}
+                        {desktopCartSlot}
                     </div>
                 </div>
             </div>

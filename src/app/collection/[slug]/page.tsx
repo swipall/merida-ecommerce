@@ -30,8 +30,8 @@ async function getCollectionProducts(slug: string, searchParams: { [key: string]
 }
 
 async function getAllCategoryGroups() {
-    'use cache';
-    cacheLife('minutes');
+    'use cache: remote';
+    cacheLife('hours');
     cacheTag('taxonomy-category-tree');
 
     const parents = await getTaxonomies({ kind: 'category', is_visible_on_web: true });

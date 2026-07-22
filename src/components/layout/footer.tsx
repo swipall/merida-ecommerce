@@ -35,8 +35,8 @@ async function Copyright() {
 }
 
 export async function Footer() {
-    'use cache';
-    cacheLife('minutes');
+    'use cache: remote';
+    cacheLife('hours');
 
     const [logoUrl, siteName, siteDescription, menus] = await Promise.all([
         getSiteLogoUrl(),
