@@ -6,7 +6,7 @@ import { CatalogInterface, InterfaceApiListResponse, TaxonomyInterface } from '.
  * Get the active channel with caching enabled.
  */
 export async function getActiveChannelCached() {
-    'use cache';
+    'use cache: remote';
     cacheLife('minutes');
 
     try {
@@ -23,7 +23,7 @@ export async function getActiveChannelCached() {
  * Countries list never changes, so we cache it with max duration.
  */
 export async function getAvailableCountriesCached() {
-    'use cache';
+    'use cache: remote';
     cacheLife('max');
     cacheTag('countries');
 
@@ -40,7 +40,7 @@ export async function getAvailableCountriesCached() {
  * Get top-level collections with caching enabled.
  */
 export async function getCatalogs(params: Record<string, any> = {}): Promise<InterfaceApiListResponse<CatalogInterface>> {
-    'use cache';
+    'use cache: remote';
     cacheLife('minutes');
     cacheTag('collections');
 
@@ -62,8 +62,8 @@ export async function getCatalogs(params: Record<string, any> = {}): Promise<Int
  * Resolve a visible taxonomy by its slug, with caching enabled.
  */
 export async function getTaxonomyBySlugCached(slug: string): Promise<TaxonomyInterface | null> {
-    'use cache';
-    cacheLife('minutes');
+    'use cache: remote';
+    cacheLife('hours');
     cacheTag(`taxonomy-${slug}`);
 
     const result = await getTaxonomies({ slug, is_visible_on_web: true });
@@ -74,8 +74,8 @@ export async function getTaxonomyBySlugCached(slug: string): Promise<TaxonomyInt
  * Get the visible children of a taxonomy by its parent id, with caching enabled.
  */
 export async function getTaxonomyChildrenCached(parentId: string): Promise<TaxonomyInterface[]> {
-    'use cache';
-    cacheLife('minutes');
+    'use cache: remote';
+    cacheLife('hours');
     cacheTag(`taxonomy-children-${parentId}`);
 
     const result = await getTaxonomies({ parent: parentId, is_visible_on_web: true });

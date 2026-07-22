@@ -4,8 +4,8 @@ import { SITE_NAME } from '@/lib/metadata';
 import type { SiteConfig } from '@/lib/swipall/types/types';
 
 async function getCachedSiteConfig(): Promise<SiteConfig | null> {
-    'use cache';
-    cacheLife('minutes');
+    'use cache: remote';
+    cacheLife('hours');
     return getSiteConfig();
 }
 
