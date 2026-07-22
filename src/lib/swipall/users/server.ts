@@ -7,7 +7,7 @@ export async function getCustomerInfoServer(): Promise<CustomerInfoInterface> {
     try {
         return await get<CustomerInfoInterface>('/api/v1/shop/customer/info', {}, { useAuthToken: true });
     } catch (err) {
-        if (err instanceof SwipallAPIError && err.status === 404) {
+        if (err instanceof SwipallAPIError && (err.status === 404 || err.status === 401)) {
             const { removeAuthToken } = await import('@/lib/auth');
             await removeAuthToken();
         }

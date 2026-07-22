@@ -13,7 +13,7 @@ export async function getCustomerInfoAction(): Promise<GetCustomerInfoResult> {
         const data = await getCustomerInfoServer();
         return { sessionExpired: false, data };
     } catch (err) {
-        if (err instanceof SwipallAPIError && err.status === 404) {
+        if (err instanceof SwipallAPIError && (err.status === 404 || err.status === 401)) {
             return { sessionExpired: true };
         }
         return { sessionExpired: false, data: null };

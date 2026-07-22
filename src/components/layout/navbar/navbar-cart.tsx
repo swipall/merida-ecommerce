@@ -1,8 +1,6 @@
 import { getActiveOrder } from '@/lib/swipall/rest-adapter';
 import { SwipallAPIError } from '@/lib/swipall/api';
 import { cacheLife, cacheTag } from 'next/cache';
-import { CartIcon } from './cart-icon';
-import { NavbarCartCleaner } from './navbar-cart-cleaner';
 
 async function getCartItemCount(): Promise<number> {
     'use cache: private';
@@ -14,19 +12,24 @@ async function getCartItemCount(): Promise<number> {
     return order?.lines.filter((line) => !line.item.name.toUpperCase().includes('ENVIO')).length ?? 0;
 }
 
-export async function NavbarCart() {
+interface NavbarCartResult {
+    cartItemCount: number;
+    staleCartId: boolean;
+}
+
+/**
+ * Resuelto una sola vez por Navbar y reutilizado en los slots mobile/desktop
+ * para que un cart-id inválido dispare un único NavbarCartCleaner en vez de
+ * dos instancias concurrentes (una por slot), que competían entre sí.
+ */
+export async function getNavbarCartResult(): Promise<NavbarCartResult> {
     try {
         const cartItemCount = await getCartItemCount();
-        return <CartIcon cartItemCount={cartItemCount} />;
+        return { cartItemCount, staleCartId: false };
     } catch (error) {
         if (error instanceof SwipallAPIError && error.status === 404) {
-            return (
-                <>
-                    <NavbarCartCleaner />
-                    <CartIcon cartItemCount={0} />
-                </>
-            );
+            return { cartItemCount: 0, staleCartId: true };
         }
-        return <CartIcon cartItemCount={0} />;
+        return { cartItemCount: 0, staleCartId: false };
     }
 }
