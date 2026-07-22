@@ -34,6 +34,7 @@ jobs:
           --build-arg SWIPALL_SHOP_API_URL="${{ secrets.SWIPALL_SHOP_API_URL }}" \
           --build-arg CMS_EDITOR_ORIGIN="${{ secrets.CMS_EDITOR_ORIGIN }}" \
           --build-arg PREVIEW_ACCESS_SECRET="${{ secrets.PREVIEW_ACCESS_SECRET }}" \
+          --build-arg REDIS_URL="${{ secrets.REDIS_URL }}" \
           -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
 
     - name: Push Docker Image to Artifact Registry
